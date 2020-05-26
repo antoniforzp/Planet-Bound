@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.shape.Circle?>
+<?import javafx.scene.shape.Line?>
+<?import javafx.scene.shape.Polygon?>
+<?import javafx.scene.shape.Rectangle?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<HBox alignment="CENTER" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="app.controllers.WaitInSpace">
+   <children>
+      <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="800.0">
+          <children>
+              <Pane prefHeight="600.0" prefWidth="200.0">
+                  <children>
+                      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#bcdeff" height="600.0" stroke="BLACK" strokeType="INSIDE" width="200.0" />
+                      <GridPane layoutX="3.0" layoutY="69.0" prefHeight="118.0" prefWidth="194.0">
+                          <columnConstraints>
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="93.66666412353516" minWidth="10.0" prefWidth="24.333330154418945" />
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="171.00000190734863" minWidth="10.0" prefWidth="169.66666984558105" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                          <children>
+                              <Label fx:id="captain" text="&lt;Captain&gt;" GridPane.columnIndex="1" />
+                              <Label fx:id="navigator" text="&lt;Navigator&gt;" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="landingParty" text="&lt;LandingParty&gt;" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label fx:id="shield" text="&lt;Shield&gt;" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label fx:id="weapon" text="&lt;Weapon&gt;" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label fx:id="cargo" text="&lt;Cargo&gt;" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Rectangle fx:id="captainRec" arcHeight="5.0" arcWidth="5.0" fill="#f8db01" height="10.0" stroke="BLACK" strokeType="INSIDE" width="10.0" />
+                              <Rectangle fx:id="navigatorRec" arcHeight="5.0" arcWidth="5.0" fill="#0a6fff" height="10.0" stroke="BLACK" strokeType="INSIDE" width="10.0" GridPane.rowIndex="1" />
+                              <Rectangle fx:id="landingPartyRec" arcHeight="5.0" arcWidth="5.0" fill="#da0d0d" height="10.0" stroke="BLACK" strokeType="INSIDE" width="10.0" GridPane.rowIndex="2" />
+                              <Rectangle fx:id="shieldRec" arcHeight="5.0" arcWidth="5.0" fill="#d020c1" height="10.0" stroke="BLACK" strokeType="INSIDE" width="10.0" GridPane.rowIndex="3" />
+                              <Rectangle fx:id="weaponRec" arcHeight="5.0" arcWidth="5.0" fill="#ff8a12" height="10.0" stroke="BLACK" strokeType="INSIDE" width="10.0" GridPane.rowIndex="4" />
+                              <Rectangle fx:id="cargoRec" arcHeight="5.0" arcWidth="5.0" fill="#57dd32" height="10.0" stroke="BLACK" strokeType="INSIDE" width="10.0" GridPane.rowIndex="5" />
+                          </children>
+                      </GridPane>
+                      <GridPane layoutX="8.0" layoutY="217.0" prefHeight="148.0" prefWidth="188.0">
+                          <columnConstraints>
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="64.33333587646484" minWidth="10.0" prefWidth="62.333335876464844" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="69.33333587646484" minWidth="10.0" prefWidth="32.666664123535156" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="69.33333587646484" minWidth="10.0" prefWidth="19.666664123535156" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="69.33333587646484" minWidth="10.0" prefWidth="31.333335876464844" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="99.99999237060547" minWidth="10.0" prefWidth="73.33333587646484" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="20.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                          <children>
+                              <Label text="shields:" GridPane.rowIndex="2" />
+                              <Label text="weapon:" GridPane.rowIndex="3" />
+                              <Label text="m/drone:" GridPane.rowIndex="5" />
+                              <Label text="fuel:" GridPane.rowIndex="1" />
+                              <Label text="/" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <Label text="/" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <Label text="/" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <Label text="/" GridPane.columnIndex="2" GridPane.rowIndex="5" />
+                              <Label fx:id="fuel" text="f" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="shields" text="s" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label fx:id="ammunition" text="w" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label fx:id="droneShields" text="d" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                              <Label fx:id="maxFuel" text="fm" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <Label fx:id="maxShields" text="sm" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <Label fx:id="maxAmmunition" text="wm" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <Label fx:id="maxDroneShields" text="dm" GridPane.columnIndex="3" GridPane.rowIndex="5" />
+                              <Label text="isActive:" GridPane.columnIndex="4" />
+                              <Label fx:id="shieldsActive" text="a" GridPane.columnIndex="4" GridPane.rowIndex="2" />
+                              <Label fx:id="weaponActive" text="a" GridPane.columnIndex="4" GridPane.rowIndex="3" />
+                              <Label fx:id="droneActive" text="a" GridPane.columnIndex="4" GridPane.rowIndex="5" />
+                              <Label fx:id="weaponType" text="&lt;type&gt;" GridPane.columnIndex="4" GridPane.rowIndex="4" />
+                          </children>
+                      </GridPane>
+                      <Label fx:id="type" alignment="CENTER" layoutX="26.0" layoutY="11.0" prefHeight="17.0" prefWidth="146.0" text="&lt;type&gt;">
+                          <font>
+                              <Font size="15.0" />
+                          </font>
+                      </Label>
+                      <Label layoutX="81.0" layoutY="46.0" text="Crew:">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </Label>
+                      <Label layoutX="60.0" layoutY="196.0" text="Equipment:">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </Label>
+                      <GridPane layoutX="8.0" layoutY="476.0" prefHeight="116.0" prefWidth="188.0">
+                          <columnConstraints>
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="55.666664123535156" minWidth="10.0" prefWidth="39.66666793823242" />
+                              <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" maxWidth="90.33333206176758" minWidth="10.0" prefWidth="33.0" />
+                              <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="90.33333206176758" minWidth="10.0" prefWidth="32.0" />
+                              <ColumnConstraints halignment="LEFT" hgrow="SOMETIMES" maxWidth="87.33333587646484" minWidth="10.0" prefWidth="78.66666412353516" />
+                          </columnConstraints>
+                          <rowConstraints>
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" valignment="CENTER" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                              <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                          </rowConstraints>
+                          <children>
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#434343" height="20.0" stroke="BLACK" strokeType="INSIDE" width="20.0" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#3d80ff" height="20.0" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.rowIndex="1" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#43ad3d" height="20.0" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.rowIndex="2" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#c3432c" height="20.0" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.rowIndex="3" />
+                              <Label fx:id="blacks" text="b" GridPane.columnIndex="1" />
+                              <Label fx:id="blues" text="bl" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                              <Label fx:id="greens" text="g" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                              <Label fx:id="reds" text="r" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                              <Label fx:id="maxBlacks" text="bm" GridPane.columnIndex="3" />
+                              <Label fx:id="maxBlues" text="blm" GridPane.columnIndex="3" GridPane.rowIndex="1" />
+                              <Label fx:id="maxGreens" text="gm" GridPane.columnIndex="3" GridPane.rowIndex="2" />
+                              <Label fx:id="maxReds" text="rm" GridPane.columnIndex="3" GridPane.rowIndex="3" />
+                              <Label text="/" GridPane.columnIndex="2" GridPane.rowIndex="3" />
+                              <Label text="/" GridPane.columnIndex="2" />
+                              <Label text="/" GridPane.columnIndex="2" GridPane.rowIndex="1" />
+                              <Label text="/" GridPane.columnIndex="2" GridPane.rowIndex="2" />
+                              <Rectangle arcHeight="5.0" arcWidth="5.0" fill="#dd4abd" height="20.0" stroke="BLACK" strokeType="INSIDE" width="20.0" GridPane.rowIndex="4" />
+                              <Label fx:id="artifacts" text="a" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                              <Label text="/" GridPane.columnIndex="2" GridPane.rowIndex="4" />
+                              <Label fx:id="maxArtifacts" text="am" GridPane.columnIndex="3" GridPane.rowIndex="4" />
+                          </children>
+                      </GridPane>
+                      <Label layoutX="14.0" layoutY="441.0" prefHeight="17.0" prefWidth="105.0" text="basic C/S" />
+                      <Label layoutX="135.0" layoutY="441.0" prefHeight="17.0" prefWidth="22.0" text="lvl:" />
+                      <Label fx:id="level" layoutX="155.0" layoutY="441.0" prefHeight="17.0" prefWidth="22.0" text="0" />
+                      <Label layoutX="63.0" layoutY="411.0" text="Resources:">
+                          <font>
+                              <Font size="14.0" />
+                          </font>
+                      </Label>
+                  </children>
+              </Pane>
+              <Pane layoutX="200.0" prefHeight="501.0" prefWidth="601.0">
+                  <children>
+                      <Rectangle arcHeight="5.0" arcWidth="5.0" fill="WHITE" height="40.0" stroke="BLACK" strokeType="INSIDE" width="600.0" />
+                      <Rectangle arcHeight="5.0" arcWidth="5.0" height="460.0" layoutY="40.0" stroke="#323232" strokeType="INSIDE" strokeWidth="2.0" width="600.0" />
+                      <Label fx:id="state" alignment="CENTER" layoutX="180.0" layoutY="12.0" prefHeight="17.0" prefWidth="286.0" text="&lt;state&gt;" />
+                      <Line endX="244.0" layoutX="115.0" layoutY="250.0" startX="-115.0" stroke="WHITE" strokeWidth="2.0" />
+                      <Circle fill="#eb0a0a" layoutX="227.0" layoutY="250.0" radius="16.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                      <Line fx:id="wormhole" endX="469.5" endY="-10.0" layoutX="125.0" layoutY="260.0" startX="329.0" startY="-10.0" stroke="#dde31b" strokeWidth="6.0" />
+                      <Line fx:id="wayOut" endX="471.0" endY="-10.0" layoutX="125.0" layoutY="260.0" startX="329.0" startY="-10.0" stroke="WHITE" strokeWidth="2.0" />
+                      <Text fill="WHITE" layoutX="212.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="event" />
+                      <Text fx:id="planetText" fill="WHITE" layoutX="298.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="planet" textAlignment="CENTER" wrappingWidth="216.0" />
+                      <Text fx:id="stationText" fill="WHITE" layoutX="365.0" layoutY="357.0" strokeType="OUTSIDE" strokeWidth="0.0" text="station detected" textAlignment="CENTER" wrappingWidth="86.0" />
+                      <Circle fx:id="stationCircle" fill="#f2221b" layoutX="406.0" layoutY="250.0" radius="68.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                      <Circle fx:id="planetCircle" fill="DODGERBLUE" layoutX="406.0" layoutY="250.0" radius="59.0" stroke="BLACK" strokeType="INSIDE" strokeWidth="0.0" />
+                      <Polygon fx:id="ship0" fill="#89a8a3" layoutX="114.0" layoutY="294.0" points="-67.0, -55.0, -67.0, -34.0, -37.0, -43.0" stroke="#5b5a5a" strokeType="INSIDE" strokeWidth="2.0" />
+                      <Polygon fx:id="ship1" fill="#89a8a3" layoutX="264.0" layoutY="294.0" points="-67.0, -55.0, -67.0, -34.0, -37.0, -43.0" stroke="#5b5a5a" strokeType="INSIDE" strokeWidth="2.0" />
+                      <Polygon fx:id="ship2" fill="#89a8a3" layoutX="390.0" layoutY="294.0" points="-67.0, -55.0, -67.0, -34.0, -37.0, -43.0" stroke="#5b5a5a" strokeType="INSIDE" strokeWidth="2.0" />
+                      <Text fill="WHITE" layoutX="39.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="entrance" />
+                      <Text fx:id="wormholeText" fill="WHITE" layoutX="509.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="wormhole" />
+                      <Text fx:id="wayOutText" fill="WHITE" layoutX="517.0" layoutY="283.0" strokeType="OUTSIDE" strokeWidth="0.0" text="wayout" />
+                      <Text fill="WHITE" layoutX="42.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="ship position:" />
+                      <Text fx:id="position" fill="WHITE" layoutX="126.0" layoutY="74.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;pos&gt;" />
+                      <Text fill="WHITE" layoutX="77.0" layoutY="91.0" strokeType="OUTSIDE" strokeWidth="0.0" text="sector:" />
+                      <Text fx:id="spaceSector" fill="WHITE" layoutX="119.0" layoutY="90.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;space sector&gt;" wrappingWidth="216.0" />
+                      <Text fx:id="spaceStructure" fill="WHITE" layoutX="118.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;space sector&gt;" wrappingWidth="410.0" />
+                      <Polygon fx:id="ship3" fill="#89a8a3" layoutX="590.0" layoutY="295.0" points="-67.0, -55.0, -67.0, -34.0, -37.0, -43.0" stroke="#5b5a5a" strokeType="INSIDE" strokeWidth="2.0" />
+                  <Button layoutX="36.0" layoutY="446.0" mnemonicParsing="false" onAction="#looseMember" prefHeight="25.0" prefWidth="53.0" text="kill" />
+                  <Button layoutX="111.0" layoutY="446.0" mnemonicParsing="false" onAction="#looseFuel" prefHeight="25.0" prefWidth="53.0" text="fuel" />
+                  <Label layoutX="36.0" layoutY="380.0" prefHeight="59.0" prefWidth="65.0" text="Loose one crew member:" textFill="WHITE" wrapText="true" />
+                  <Label layoutX="111.0" layoutY="399.0" prefHeight="40.0" prefWidth="65.0" text="Loose one fuel cell:" textFill="WHITE" wrapText="true" />
+                  </children>
+              </Pane>
+              <Pane fx:id="convertView" layoutX="200.0" prefHeight="500.0" prefWidth="600.0" visible="false">
+                  <fx:include source="convertView.fxml" />
+              </Pane>
+              <Pane fx:id="upgradeView" layoutX="200.0" prefHeight="500.0" prefWidth="600.0" visible="false">
+                  <fx:include source="upgradeView.fxml" />
+              </Pane>
+              <Button layoutX="220.0" layoutY="540.0" mnemonicParsing="false" onAction="#travel" prefHeight="40.0" prefWidth="94.0" text="travel" />
+              <Button layoutX="679.0" layoutY="538.0" mnemonicParsing="false" onAction="#goConvert" prefHeight="40.0" prefWidth="94.0" text="convert" />
+              <Button layoutX="571.0" layoutY="538.0" mnemonicParsing="false" onAction="#goUpgrade" prefHeight="40.0" prefWidth="94.0" text="upgrades" />
+              <Button layoutX="334.0" layoutY="538.0" mnemonicParsing="false" onAction="#goSurface" prefHeight="40.0" prefWidth="105.0" text="drop on planet" />
+              <Text fx:id="alert" layoutX="276.0" layoutY="524.0" strokeType="OUTSIDE" strokeWidth="0.0" text="&lt;alert&gt;" textAlignment="CENTER" wrappingWidth="450.13671875" />
+          </children>
+      </Pane>
+   </children>
+</HBox>
