@@ -2082,3 +2082,111 @@ Alien is dead
 12/06/2020 22:29:33 | 	Extraction point reached. Returning to ship
 12/06/2020 22:29:33 | 	Loaded resources: [resources.types.GreenResource@8a7ec40]
 12/06/2020 22:29:33 | 	Multiplying resources:GreenResource x 1
+12/06/2020 23:40:28 | 	=========================================
+12/06/2020 23:40:28 | 	Start log session
+12/06/2020 23:40:50 | 	Military ship chosen
+12/06/2020 23:41:02 | 	Cannot enter upgrade section
+12/06/2020 23:41:04 | 	Ship fuel consumed: 1
+12/06/2020 23:41:04 | 	Ship encountered an event
+12/06/2020 23:41:05 | 	Ship fuel consumed: 1
+12/06/2020 23:41:05 | 	no. 4 event processed
+12/06/2020 23:41:06 | 	Ship fuel consumed: 1
+12/06/2020 23:41:06 | 	Ship travelled in space. Pos: 2
+12/06/2020 23:41:07 | 	Cannot drop on planet
+12/06/2020 23:41:09 | 	Cannot drop on planet
+12/06/2020 23:41:10 | 	Cannot drop on planet
+12/06/2020 23:41:10 | 	Cannot drop on planet
+12/06/2020 23:41:10 | 	Leaving space sector: RouteOut
+12/06/2020 23:41:10 | 	Ship fuel consumed: 1
+12/06/2020 23:41:10 | 	Ship travelled in space. Pos: 3
+12/06/2020 23:41:11 | 	Ship fuel consumed: 1
+12/06/2020 23:41:11 | 	Ship travelled in space. Pos: 0
+12/06/2020 23:41:11 | 	Ship fuel consumed: 1
+12/06/2020 23:41:11 | 	Ship encountered an event
+12/06/2020 23:41:12 | 	Crew member lost:  CargoOfficer
+12/06/2020 23:41:12 | 	no. 1 event processed
+12/06/2020 23:41:13 | 	Ship fuel consumed: 1
+12/06/2020 23:41:13 | 	Ship travelled in space. Pos: 2
+12/06/2020 23:41:13 | 	Cannot drop on planet
+12/06/2020 23:41:14 | 	Cannot drop on planet
+12/06/2020 23:41:15 | 	Leaving space sector: RouteOut
+12/06/2020 23:41:15 | 	Ship fuel consumed: 1
+12/06/2020 23:41:15 | 	Ship travelled in space. Pos: 3
+12/06/2020 23:41:15 | 	Ship fuel consumed: 1
+12/06/2020 23:41:15 | 	Ship travelled in space. Pos: 0
+12/06/2020 23:41:15 | 	Ship fuel consumed: 1
+12/06/2020 23:41:15 | 	Ship encountered an event
+12/06/2020 23:41:16 | 	no. 3 event processed
+12/06/2020 23:41:17 | 	Ship fuel consumed: 1
+12/06/2020 23:41:17 | 	Ship travelled in space. Pos: 2
+12/06/2020 23:41:18 | 	Cannot drop on planet
+12/06/2020 23:41:18 | 	Leaving space sector: RouteOut
+12/06/2020 23:41:18 | 	Ship fuel consumed: 1
+12/06/2020 23:41:18 | 	Ship travelled in space. Pos: 3
+12/06/2020 23:41:19 | 	Ship fuel consumed: 1
+12/06/2020 23:41:19 | 	Ship travelled in space. Pos: 0
+12/06/2020 23:41:19 | 	Ship fuel consumed: 1
+12/06/2020 23:41:19 | 	Ship encountered an event
+12/06/2020 23:41:20 | 	no. 5 event processed
+12/06/2020 23:41:21 | 	Ship fuel consumed: 1
+12/06/2020 23:41:21 | 	Ship travelled in space. Pos: 2
+12/06/2020 23:41:22 | 	Cannot drop on planet
+12/06/2020 23:41:22 | 	Cannot drop on planet
+12/06/2020 23:41:22 | 	Cannot drop on planet
+12/06/2020 23:41:23 | 	Cannot drop on planet
+12/06/2020 23:41:23 | 	Cannot drop on planet
+12/06/2020 23:42:46 | 	=========================================
+12/06/2020 23:42:46 | 	Start log session
+12/06/2020 23:42:51 | 	Military ship chosen
+12/06/2020 23:42:52 | 	Ship fuel consumed: 1
+12/06/2020 23:42:52 | 	Ship encountered an event
+12/06/2020 23:42:53 | 	Crew member lost:  CargoOfficer
+12/06/2020 23:42:53 | 	no. 1 event processed
+12/06/2020 23:42:55 | 	Dropped on planet
+13/06/2020 00:01:13 | 	=========================================
+13/06/2020 00:01:13 | 	Start log session
+13/06/2020 00:01:19 | 	Military ship chosen
+13/06/2020 00:01:22 | 	Ship fuel consumed: 1
+13/06/2020 00:01:22 | 	Ship encountered an event
+13/06/2020 00:01:23 | 	Crew member lost:  CargoOfficer
+13/06/2020 00:01:23 | 	no. 1 event processed
+13/06/2020 00:01:24 | 	Ship fuel consumed: 1
+13/06/2020 00:01:24 | 	Ship travelled in space. Pos: 2
+13/06/2020 00:01:25 | 	Leaving space sector: RouteOut
+13/06/2020 00:01:25 | 	Ship fuel consumed: 1
+13/06/2020 00:01:25 | 	Ship travelled in space. Pos: 3
+13/06/2020 00:01:26 | 	Ship fuel consumed: 1
+13/06/2020 00:01:26 | 	Ship travelled in space. Pos: 0
+13/06/2020 00:01:26 | 	Ship fuel consumed: 1
+13/06/2020 00:01:26 | 	Ship encountered an event
+13/06/2020 00:01:27 | 	Loaded resources: [resources.types.BlueResource@489f1762]
+13/06/2020 00:01:27 | 	no. 2 event processed
+13/06/2020 00:01:28 | 	Ship fuel consumed: 1
+13/06/2020 00:01:28 | 	Ship travelled in space. Pos: 2
+13/06/2020 00:01:28 | 	Leaving space sector: RouteOut
+13/06/2020 00:01:28 | 	Ship fuel consumed: 1
+13/06/2020 00:01:28 | 	Ship travelled in space. Pos: 3
+13/06/2020 00:01:29 | 	Ship fuel consumed: 1
+13/06/2020 00:01:29 | 	Ship travelled in space. Pos: 0
+13/06/2020 00:01:29 | 	Ship fuel consumed: 1
+13/06/2020 00:01:29 | 	Ship encountered an event
+13/06/2020 00:01:30 | 	Loaded resources: [resources.types.BlueResource@5f126b6a, resources.types.BlueResource@5f126b6a, resources.types.BlueResource@5f126b6a, resources.types.BlueResource@5f126b6a, resources.types.BlueResource@5f126b6a]
+13/06/2020 00:01:30 | 	no. 2 event processed
+13/06/2020 00:01:32 | 	Ship fuel consumed: 1
+13/06/2020 00:01:32 | 	Ship travelled in space. Pos: 2
+13/06/2020 00:01:33 | 	Dropped on planet
+13/06/2020 00:01:35 | 	Drone travels on surface: 2 5
+13/06/2020 00:01:35 | 	Drone travels on surface: 2 4
+13/06/2020 00:01:35 | 	Alien encountered: BlackAlien
+13/06/2020 00:01:35 | 	Fight process: 
+ Alien type: BlackAlien
+Alien is dead
+
+13/06/2020 00:01:35 | 	Fight won. Lost shields: 0
+13/06/2020 00:01:38 | 	Drone travels on surface: 3 3
+13/06/2020 00:01:38 | 	Drone travels on surface: 4 3
+13/06/2020 00:01:38 | 	Drone travels on surface: 4 4
+13/06/2020 00:01:39 | 	Drone travels on surface: 4 5
+13/06/2020 00:01:39 | 	Extraction point reached. Returning to ship
+13/06/2020 00:01:39 | 	Loaded resources: [resources.types.RedResource@15332ce4, resources.types.RedResource@15332ce4, resources.types.RedResource@15332ce4, resources.types.RedResource@15332ce4, resources.types.RedResource@15332ce4]
+13/06/2020 00:01:39 | 	Multiplying resources:RedResource x 5

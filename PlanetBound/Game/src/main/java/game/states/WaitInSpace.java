@@ -53,12 +53,12 @@ public class WaitInSpace extends State {
     @Override
     public State dropOnSurface() {
 
-        System.out.println("pos   : " + (Data.getInstance().getPosition() == 1));
+        System.out.println("pos   : " + (Data.getInstance().getPosition() == 1 || Data.getInstance().getPosition() == 2));
         System.out.println("crew  : " + Data.getInstance().getShip().getCrew().contains(CrewMembers.LandingPartyOfficer));
         System.out.println("n visi: " + !Data.getInstance().isPlanetVisited());
 
         Data.getInstance().setCanDropOnSurface(
-                Data.getInstance().getPosition() == 1 &&
+                (Data.getInstance().getPosition() == 1 || Data.getInstance().getPosition() == 2) &&
                         Data.getInstance().getShip().getCrew().contains(CrewMembers.LandingPartyOfficer)
                         && !Data.getInstance().isPlanetVisited()
         );
