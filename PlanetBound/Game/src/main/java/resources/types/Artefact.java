@@ -3,7 +3,9 @@ package resources.types;
 import resources.IResource;
 import resources.ResourceType;
 
-public class Artefact implements IResource {
+import java.io.Serializable;
+
+public class Artefact implements IResource, Serializable {
     ResourceType type;
 
     public Artefact() {

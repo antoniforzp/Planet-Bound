@@ -1,40 +1,40 @@
 package game.states;
 
-import exceptions.UnavailableException;
+import game.singletons.Data;
 import game.Game;
-import logic.singleton.LogicConfig;
+import game.IState;
 import org.junit.jupiter.api.Test;
 import ship.MiningShip;
 import walker.alien.aliens.testing.BadassAlien;
 import walker.alien.aliens.testing.WeakAlien;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FightTest {
 
     @Test
-    void fightTest1() throws UnavailableException {
+    void fightTest1() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setAlien(new BadassAlien());
-        Game.setState(Fight.getInstance());
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().setAlien(new BadassAlien());
+        Game.getInstance().setState(new Fight());
 
-        assertFalse(Game.fight());
+        Game.getInstance().fight();
 
-        IState state = Game.getState();
-        assertEquals(state, WaitInSpace.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), WaitInSpace.class);
     }
 
     @Test
-    void fightTest2() throws UnavailableException {
+    void fightTest2() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setAlien(new WeakAlien());
-        Game.setState(Fight.getInstance());
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().setAlien(new WeakAlien());
+        Game.getInstance().setState(new Fight());
 
-        assertTrue(Game.fight());
+        Game.getInstance().fight();
 
-        IState state = Game.getState();
-        assertEquals(state, ExplorePlanet.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), ExplorePlanet.class);
     }
 }

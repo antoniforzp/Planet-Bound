@@ -4,89 +4,76 @@ import app.Controller;
 import app.ControllerFactory;
 import game.Game;
 import javafx.fxml.FXML;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import resources.IResource;
 import resources.types.BlackResource;
 import resources.types.BlueResource;
 import resources.types.GreenResource;
 import resources.types.RedResource;
 
-import java.util.HashMap;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 
 public class Upgrade extends Controller {
 
     public Text state;
     public Text alert;
-
-    public Upgrade() {
-        this.updates = new HashMap<>();
-        updates.put("state", () -> {
-            updateState();
-            return null;
-        });
-    }
+    public ImageView background;
 
     private void updateState() {
-        state.setText(String.valueOf(Game.getState()));
+        state.setText(String.valueOf(Game.getInstance().getState()));
     }
 
     @FXML
     void initialize() {
+        try {
+            background.setImage(new Image(new FileInputStream("sprites/upgradeBG.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
         alert.setText("");
         updateState();
     }
 
     @FXML
     public void rechargeDrone() {
-        alert.setText("");
-        if (!Game.upgrade(1)) {
-            alert.setText("Your drone is charged or not enough resources.");
-        }
+        Game.getInstance().upgrade(1);
     }
 
     @FXML
     public void upgradeCargoHold() {
-        alert.setText("");
-        if (!Game.upgrade(2)) {
-            alert.setText("You reached max level or not enough resources.");
-        }
+        Game.getInstance().upgrade(2);
     }
 
     @FXML
     public void hireMember() {
-        alert.setText("");
-        if (!Game.upgrade(3)) {
-            alert.setText("You have full crew or not enough resources.");
-        }
+        Game.getInstance().upgrade(3);
     }
 
     @FXML
     public void upgradeWeaponSystem() {
-        alert.setText("");
-        if (!Game.upgrade(4)) {
-            alert.setText("You cannot upgrade your ship or not enough resources.");
-        }
+        Game.getInstance().upgrade(4);
     }
 
     @FXML
     public void buyNewMiningDrone() {
-        alert.setText("");
-        if (!Game.upgrade(5)) {
-            alert.setText("Not enough resources.");
-        }
-    }
-
-    @FXML
-    public void refill(){
-        IResource[] resource = new IResource[]{new BlackResource(), new BlueResource(), new RedResource(), new GreenResource()};
-        LogicConfig.getInstance().getShip().getCargo().loadResources(resource);
+        Game.getInstance().upgrade(5);
     }
 
     @FXML
     public void goBack() {
         WaitInSpace wait = (WaitInSpace) ControllerFactory.getController(WaitInSpace.class);
         wait.upgradeView.setVisible(false);
-        Game.finish();
+        Game.getInstance().finish();
+    }
+
+    //test button
+    @FXML
+    public void refill() {
+        IResource[] resource = new IResource[]{new BlackResource(), new BlueResource(), new RedResource(), new GreenResource()};
+        Data.getInstance().getShip().getCargo().loadResources(resource);
     }
 }

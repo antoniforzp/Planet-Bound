@@ -1,19 +1,17 @@
 package ship.weapons;
 
-import java.util.ArrayList;
+import binding.properties.IntegerProperty;
 
 public class AdvancedWeaponSystem extends Weapon {
 
     public AdvancedWeaponSystem() {
-        this.capacity = 5;
-        this.isActive = true;
-        this.observers = new ArrayList<>();
+        this.capacity = new IntegerProperty(5);
     }
 
     public AdvancedWeaponSystem(int ammunitionLeft) {
-        this.capacity = 18;
-        this.ammunition = ammunitionLeft;
-        this.isActive = true;
+        super();
+        this.capacity = new IntegerProperty(18);
+        this.ammunition = new IntegerProperty(ammunitionLeft);
     }
 
     @Override

@@ -2,18 +2,20 @@ package logic;
 
 import exceptions.CaptainDeletedException;
 import exceptions.OutOfFuelException;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import space.spaceObject.ISpaceObject;
 import space.SpaceSector;
 import space.spaceObject.Event;
 
-public class WaitInSpaceLogic {
+import java.io.Serializable;
+
+public class WaitInSpaceLogic implements Serializable {
 
 
     public boolean setPosition(int position) {
-        LogicConfig.getInstance().setPosition(position);
+        Data.getInstance().setPosition(position);
 
-        SpaceSector spaceSector = LogicConfig.getInstance().getSpaceSector();
+        SpaceSector spaceSector = Data.getInstance().getSpaceSector();
         ISpaceObject currentPlace = spaceSector.getObjects()[position];
 
         return currentPlace.getClass() == Event.class;
@@ -21,17 +23,17 @@ public class WaitInSpaceLogic {
 
     public boolean travel() throws OutOfFuelException, CaptainDeletedException {
         boolean check = false;
-        int position = LogicConfig.getInstance().getPosition();
-        SpaceSector spaceSector = LogicConfig.getInstance().getSpaceSector();
+        int position = Data.getInstance().getPosition();
+        SpaceSector spaceSector = Data.getInstance().getSpaceSector();
 
         //after exceeding while array of space objects generate new space sector
         ++position;
         if (position > spaceSector.getObjects().length - 1) {
 
             setPosition(0);
-            position = LogicConfig.getInstance().getPosition();
+            position = Data.getInstance().getPosition();
 
-            LogicConfig.getInstance().setSpaceSector(new SpaceSector());
+            Data.getInstance().setSpaceSector(new SpaceSector());
         } else {
             setPosition(position);
         }

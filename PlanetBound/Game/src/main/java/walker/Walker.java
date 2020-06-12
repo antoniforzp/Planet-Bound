@@ -1,30 +1,38 @@
 package walker;
 
-import observer.IObservable;
-import observer.IObserver;
+import binding.observer.IObserver;
+import binding.properties.CoordinateProperty;
+import game.singletons.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public abstract class Walker implements IWalker, IObservable {
+public abstract class Walker implements Serializable {
 
-    protected ArrayList<IObserver> observers;
+    private final CoordinateProperty destination = new CoordinateProperty(new Coordinate(0, 0));
+    private final CoordinateProperty position = new CoordinateProperty(new Coordinate(0, 0));
 
-    private Coordinate destination = new Coordinate(0, 0);
-    private Coordinate position = new Coordinate(0, 0);
+    public Walker() {
+//        Data.getInstance().getBinder().addProperty(destination);
+//        Data.getInstance().getBinder().addProperty(position);
+    }
 
     public void setDestination(Coordinate destination) {
-        this.destination = destination;
+        this.destination.setValue(destination);
     }
 
     public Coordinate getPosition() {
+        return position.getValue();
+    }
+
+    public CoordinateProperty positionCoordinateProperty() {
         return position;
     }
 
     public void setPositionInitial(int x, int y) {
-        position = new Coordinate(x, y);
+        position.setValue(new Coordinate(x, y));
     }
 
-    @Override
     public void moveTowardsDestination() {
 
         int xDiff = destination.getX() - position.getX();
@@ -55,8 +63,7 @@ public abstract class Walker implements IWalker, IObservable {
         }
     }
 
-    @Override
-    public boolean moveOwn(int x, int y) {
+    public void moveOwn(int x, int y) {
 
         if (
             //check up
@@ -68,30 +75,12 @@ public abstract class Walker implements IWalker, IObservable {
                         //check right
                         (x == position.getX() + 1 && y == position.getY())
         ) {
-            position.setX(x);
-            position.setY(y);
-            return true;
-        }
-        return false;
-    }
 
-
-    //IOBSERVABLE INTERFACE IMPLEMENTATION
-
-    @Override
-    public void addObserver(IObserver observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(IObserver observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyChange(String property) {
-        for (IObserver o : observers) {
-            o.update(property);
+//            check grid
+            if (x >= 0 && x <= 5 && y >= 0 && y <= 5) {
+                position.setX(x);
+                position.setY(y);
+            }
         }
     }
 }

@@ -1,71 +1,15 @@
 package game.states;
 
-import exceptions.*;
+import config.Logger;
+import game.State;
 
-public class Win implements IState {
-
-    protected static IState instance;
-
-    public static IState getInstance() {
-        if (instance == null)
-            instance = new Win();
-        return instance;
-    }
+public class Win extends State {
 
     @Override
-    public boolean chooseShip(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
+    public State finish() {
 
-    @Override
-    public boolean startConvert() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean convert(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean startUpgrade() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean upgrade(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    //USABILITY
-    @Override
-    public boolean finish() {
+        Logger.log("Game exit");
         System.exit(0);
-        return true;
-    }
-
-    @Override
-    public boolean dropOnSurface() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean fight() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean move(int x, int y) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean travel() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean processEvent(int choice) throws UnavailableException {
-        throw new UnavailableException();
+        return null;
     }
 }

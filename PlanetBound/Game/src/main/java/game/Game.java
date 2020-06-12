@@ -2,15 +2,13 @@ package game;
 
 import exceptions.UnavailableException;
 import exceptions.WrongArgumentException;
-import game.states.IState;
-import observer.IObservable;
-import observer.IObserver;
+import game.singletons.Data;
+import game.states.ChooseShip;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Game implements IObservable {
+public class Game implements Serializable {
 
-    private final ArrayList<IObserver> observers;
     private static Game instance;
 
     public static Game getInstance() {
@@ -21,143 +19,132 @@ public class Game implements IObservable {
     }
 
     public Game() {
-        observers = new ArrayList<>();
+        Data.getInstance().currentStateProperty().addListener((oldVal, newVal) -> {
+            System.out.println(oldVal + " ----> " + newVal);
+        });
     }
 
-    private static IState state;
+    //STATE OBJECT PROPERTY (initialized with choose ship state)
+    private State state = new ChooseShip();
 
     //STATE OPERATIONS
-    public static void setState(IState state) {
-        if (state != null) {
-            if (Game.state == null) {
-                System.out.println(" --> " + state.getClass().getName());
-            } else {
-                System.out.println(Game.state.getClass().getName() + " --> " + state.getClass().getName());
-
-            }
-            Game.state = state;
-            Game.getInstance().notifyChange("state");
-        }
+    public void setState(State state) {
+        this.state = state;
+        Data.getInstance().currentStateProperty().setValue(state);
     }
 
-    public static IState getState() {
-        return state;
+    public State getState() {
+        return this.state;
     }
 
     //STATE MACHINE OPERATIONS
-    public static boolean chooseShip(int choice) {
+    public void chooseShip(int choice) {
         try {
-            return state.chooseShip(choice);
+            state = state.chooseShip(choice);
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException | WrongArgumentException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public static boolean startConvert() {
+    public void startConvert() {
         try {
-            return state.startConvert();
+            state = state.startConvert();
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public static boolean convert(int choice) {
+    public void convert(int choice) {
         try {
-            return state.convert(choice);
+            state = state.convert(choice);
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException | WrongArgumentException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public static boolean startUpgrade() {
+    public void startUpgrade() {
         try {
-            return state.startUpgrade();
+            state = state.startUpgrade();
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public static boolean upgrade(int choice) {
+    public void upgrade(int choice) {
         try {
-            return state.upgrade(choice);
+            state = state.upgrade(choice);
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException | WrongArgumentException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public static boolean finish() {
+    public void finish() {
         try {
-            return state.finish();
+            state = state.finish();
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public static boolean dropOnSurface() {
+    public void dropOnSurface() {
         try {
-            return state.dropOnSurface();
+            state = state.dropOnSurface();
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public static boolean fight() {
+    public void fight() {
         try {
-            return state.fight();
+            state = state.fight();
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public static boolean move(int x, int y) {
+    public void move(int x, int y) {
         try {
-            return state.move(x, y);
+            state = state.move(x, y);
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public static boolean travel() {
+    public void travel() {
         try {
-            return state.travel();
+            state = state.travel();
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
-    public static boolean processEvent(int choice) {
+    public void processEvent(int choice) {
         try {
-            return state.processEvent(choice);
+            state = state.processEvent(choice);
+            Data.getInstance().currentStateProperty().setValue(state);
+
         } catch (UnavailableException | WrongArgumentException e) {
             e.printStackTrace();
-        }
-        return false;
-    }
-
-    @Override
-    public void addObserver(IObserver observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(IObserver observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyChange(String property) {
-        for (IObserver o : observers) {
-            o.update(property);
         }
     }
 }

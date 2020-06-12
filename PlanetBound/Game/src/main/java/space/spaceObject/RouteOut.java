@@ -1,12 +1,16 @@
 package space.spaceObject;
 
 import exceptions.OutOfFuelException;
-import logic.singleton.LogicConfig;
+import config.Logger;
+import game.singletons.Data;
 
-public class RouteOut implements ISpaceObject {
+import java.io.Serializable;
+
+public class RouteOut implements ISpaceObject, Serializable {
 
     @Override
     public boolean consumeShip() throws OutOfFuelException {
-        return LogicConfig.getInstance().getShip().consumeFuel(1);
+        Logger.log("Leaving space sector: RouteOut");
+        return Data.getInstance().getShip().consumeFuel(1);
     }
 }

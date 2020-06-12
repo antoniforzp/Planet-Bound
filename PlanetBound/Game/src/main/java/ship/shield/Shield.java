@@ -1,80 +1,61 @@
 package ship.shield;
 
-import observer.IObservable;
-import observer.IObserver;
+import binding.properties.IntegerProperty;
+import config.Logger;
+import game.singletons.Data;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public class Shield implements IShield, IObservable {
+public class Shield implements Serializable {
 
-    protected ArrayList<IObserver> observers;
-
-    protected int capacity;
-    protected int cells;
-    protected boolean isActive;
+    protected IntegerProperty capacity;
+    protected IntegerProperty cells;
 
     public Shield(int cells) {
-        this.capacity = cells;
-        this.cells = cells;
-        this.isActive = true;
-        this.observers = new ArrayList<>();
+        this.capacity = new IntegerProperty(cells);
+        this.cells = new IntegerProperty(cells);
+
+//        Data.getInstance().getBinder().addProperty(this.capacity);
+//        Data.getInstance().getBinder().addProperty(this.cells);
     }
 
-    @Override
     public int getCells() {
-        return cells;
+        return cells.getValue();
     }
 
-    @Override
     public int getCapacity() {
+        return capacity.getValue();
+    }
+
+    public IntegerProperty capacityIntegerProperty() {
         return capacity;
     }
 
-    @Override
-    public boolean isActive() {
-        return isActive;
+    public IntegerProperty cellsIntegerProperty() {
+        return cells;
     }
 
     //USABILITY
 
-    @Override
     public boolean chargeCell() {
 
-        if (cells < capacity) {
-            cells++;
-            notifyChange("shield");
+        if (cells.getValue() < capacity.getValue()) {
+            cells.setValue(cells.getValue() + 1);
+            Logger.log("Ship one shield cell charged");
             return true;
         }
         return false;
     }
 
-    @Override
     public boolean takeDamage(int amount) {
 
-        cells -= amount;
-        if (cells < 0) {
-            cells = 0;
+        cells.setValue(cells.getValue() - amount);
+        if (cells.getValue() < 0) {
+            cells.setValue(0);
+
+            Logger.log("Ship shield cells lost: " + amount);
             return false;
         }
         return true;
-    }
-
-    //IOBSERVABLE INTERFACE IMPLEMENTATION
-
-    @Override
-    public void addObserver(IObserver observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(IObserver observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyChange(String property) {
-        for (IObserver o : observers) {
-            o.update(property);
-        }
     }
 }

@@ -2,7 +2,7 @@ package ship;
 
 import exceptions.CaptainDeletedException;
 import exceptions.OutOfFuelException;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import org.junit.jupiter.api.Test;
 import walker.miningDrone.MiningDrone;
 
@@ -12,8 +12,8 @@ class ShipTest {
 
     @Test
     void consumeFuel() throws OutOfFuelException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Ship ship = LogicConfig.getInstance().getShip();
+        Data.getInstance().setShip(new MiningShip());
+        Ship ship = Data.getInstance().getShip();
 
         int newFuel;
 
@@ -28,8 +28,8 @@ class ShipTest {
     @Test
     void chargeOneFuel() throws OutOfFuelException {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Ship ship = LogicConfig.getInstance().getShip();
+        Data.getInstance().setShip(new MiningShip());
+        Ship ship = Data.getInstance().getShip();
 
         int newFuel;
         int fuel = ship.getFuel();
@@ -42,8 +42,8 @@ class ShipTest {
 
     @Test
     void setNewDrone() {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Ship ship = LogicConfig.getInstance().getShip();
+        Data.getInstance().setShip(new MiningShip());
+        Ship ship = Data.getInstance().getShip();
 
         MiningDrone drone = ship.getDrone();
         ship.setNewDrone();
@@ -55,8 +55,8 @@ class ShipTest {
     @Test
     void looseCrewMember() throws CaptainDeletedException {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Ship ship = LogicConfig.getInstance().getShip();
+        Data.getInstance().setShip(new MiningShip());
+        Ship ship = Data.getInstance().getShip();
         ship.looseCrewMember();
         ship.looseCrewMember();
         ship.looseCrewMember();
@@ -68,8 +68,8 @@ class ShipTest {
     @Test
     void looseCrewMember1() throws CaptainDeletedException {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Ship ship = LogicConfig.getInstance().getShip();
+        Data.getInstance().setShip(new MiningShip());
+        Ship ship = Data.getInstance().getShip();
 
         int crew = ship.getCrew().size();
         ship.looseCrewMember();
@@ -80,8 +80,8 @@ class ShipTest {
 
     @Test
     void addNewCrewMember() throws CaptainDeletedException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Ship ship = LogicConfig.getInstance().getShip();
+        Data.getInstance().setShip(new MiningShip());
+        Ship ship = Data.getInstance().getShip();
         ship.looseCrewMember();
 
         int crew = ship.getCrew().size();

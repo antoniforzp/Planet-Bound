@@ -1,139 +1,100 @@
 package game.states;
 
+import config.Logger;
+import game.*;
+import game.singletons.Data;
 import logic.ExplorePlanetLogic;
 import ship.CrewMembers;
 import exceptions.CaptainDeletedException;
 import exceptions.OutOfFuelException;
-import exceptions.UnavailableException;
-import game.Game;
 import logic.WaitInSpaceLogic;
-import logic.singleton.LogicConfig;
 
 import java.util.List;
 
-public class WaitInSpace implements IState {
+public class WaitInSpace extends State {
 
-    static IState instance;
     private final WaitInSpaceLogic waitLogic;
-
-    public static IState getInstance() {
-        if (instance == null) {
-            instance = new WaitInSpace();
-        }
-        return instance;
-    }
 
     public WaitInSpace() {
         this.waitLogic = new WaitInSpaceLogic();
     }
 
-
     @Override
-    public boolean chooseShip(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
+    public State startConvert() {
 
-    //USABILITY
-    @Override
-    public boolean startConvert() {
+        List<CrewMembers> crew = Data.getInstance().getShip().getCrew();
+        Data.getInstance().setCanStartConvert(crew.contains(CrewMembers.CargoOfficer));
 
-        //enter ConvertResources state
-        List<CrewMembers> crew = LogicConfig.getInstance().getShip().getCrew();
-        boolean check = crew.contains(CrewMembers.CargoOfficer);
-
-        if (check) {
-            Game.setState(Convert.getInstance());
-        } else {
-            Game.setState(WaitInSpace.getInstance());
+        if (Data.getInstance().isCanStartConvert()) {
+            Logger.log("Entered convert section");
+            return new Convert();
         }
-        return check;
+
+        Logger.log("Cannot enter convert section");
+        return new WaitInSpace();
     }
 
     @Override
-    public boolean convert(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
+    public State startUpgrade() {
 
-    //USABILITY
-    @Override
-    public boolean startUpgrade() {
+        Data.getInstance().setCanStartUpgrade(
+                Data.getInstance().getPlanet().withSpaceStation() &&
+                        Data.getInstance().getPosition() == 2);
 
-        boolean check = LogicConfig.getInstance().getPlanet().withSpaceStation() &&
-                LogicConfig.getInstance().getPosition() == 2;
-
-        if (check) {
-            Game.setState(Upgrade.getInstance());
-        } else {
-            Game.setState(WaitInSpace.getInstance());
+        if (Data.getInstance().isCanStartUpgrade()) {
+            Logger.log("Entered upgrade section");
+            return new Upgrade();
         }
-        return check;
+
+        Logger.log("Cannot enter upgrade section");
+        return new WaitInSpace();
     }
 
     @Override
-    public boolean upgrade(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
+    public State dropOnSurface() {
 
-    @Override
-    public boolean finish() throws UnavailableException {
-        throw new UnavailableException();
-    }
+        System.out.println("pos   : " + (Data.getInstance().getPosition() == 1));
+        System.out.println("crew  : " + Data.getInstance().getShip().getCrew().contains(CrewMembers.LandingPartyOfficer));
+        System.out.println("n visi: " + !Data.getInstance().isPlanetVisited());
 
-    //USABILITY
-    @Override
-    public boolean dropOnSurface() {
+        Data.getInstance().setCanDropOnSurface(
+                Data.getInstance().getPosition() == 1 &&
+                        Data.getInstance().getShip().getCrew().contains(CrewMembers.LandingPartyOfficer)
+                        && !Data.getInstance().isPlanetVisited()
+        );
 
-        boolean check = !LogicConfig.getInstance().getPlanet().isEmpty() && LogicConfig.getInstance().getPosition() == 2 &&
-                LogicConfig.getInstance().getShip().getCrew().contains(CrewMembers.LandingPartyOfficer);
-
-        System.out.println(LogicConfig.getInstance().getPlanet().isEmpty());
-        if (check) {
+        if (Data.getInstance().isCanDropOnSurface()) {
             ExplorePlanetLogic logic = new ExplorePlanetLogic();
-            logic.setRandomlyObjects();
-            Game.setState(ExplorePlanet.getInstance());
-        } else {
-            Game.setState(WaitInSpace.getInstance());
+            logic.setUpDropOnPlanet();
+            Data.getInstance().setPlanetVisited(true);
+
+            Logger.log("Dropped on planet");
+            return new ExplorePlanet();
         }
-        return check;
-    }
 
-    @Override
-    public boolean fight() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean move(int x, int y) throws UnavailableException {
-        throw new UnavailableException();
+        Logger.log("Cannot drop on planet");
+        return new WaitInSpace();
     }
 
     //USABILITY
     @Override
-    public boolean travel() {
+    public State travel() {
 
-        boolean check;
         try {
-            check = waitLogic.travel();
-            if (check) {
-                Game.setState(Event.getInstance());
-            } else {
-                Game.setState(WaitInSpace.getInstance());
+
+            Data.getInstance().setEventMet(waitLogic.travel());
+            if (Data.getInstance().isEventMet()) {
+
+                Logger.log("Ship encountered an event");
+                return new Event();
             }
-            return check;
 
+            Logger.log("Ship travelled in space. Pos: " + Data.getInstance().getPosition());
+            return new WaitInSpace();
 
-        } catch (CaptainDeletedException e) {
-            Game.setState(GameOver.getInstance());
-            return false;
-        } catch (OutOfFuelException e) {
-            Game.setState(Convert.getInstance());
-            LogicConfig.getInstance().setRunOutOfFuel(true);
-            return false;
+        } catch (CaptainDeletedException | OutOfFuelException e) {
+            Logger.log("Game over");
+            return new GameOver();
         }
-    }
-
-    @Override
-    public boolean processEvent(int choice) throws UnavailableException {
-        throw new UnavailableException();
     }
 }

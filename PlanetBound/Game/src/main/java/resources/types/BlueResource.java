@@ -3,7 +3,9 @@ package resources.types;
 import resources.IResource;
 import resources.ResourceType;
 
-public class BlueResource implements IResource {
+import java.io.Serializable;
+
+public class BlueResource implements IResource, Serializable {
     ResourceType type;
 
     public BlueResource() {

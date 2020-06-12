@@ -3,8 +3,7 @@ package logic;
 import exceptions.CaptainDeletedException;
 import exceptions.OutOfFuelException;
 import exceptions.WrongArgumentException;
-import game.Game;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import org.junit.jupiter.api.Test;
 import resources.*;
 import resources.types.BlackResource;
@@ -24,7 +23,7 @@ class EventLogicTest {
     @Test
     void testCase0Default() {
 
-        LogicConfig.getInstance().setShip(new MilitaryShip());
+        Data.getInstance().setShip(new MilitaryShip());
         EventLogic logic = new EventLogic();
 
         logic.setEventId(0);
@@ -34,9 +33,9 @@ class EventLogicTest {
     @Test
     void testCase1() throws CaptainDeletedException, OutOfFuelException, WrongArgumentException {
 
-        LogicConfig.getInstance().setShip(new MilitaryShip());
+        Data.getInstance().setShip(new MilitaryShip());
         EventLogic logic = new EventLogic();
-        Ship ship = LogicConfig.getInstance().getShip();
+        Ship ship = Data.getInstance().getShip();
 
         //one crew member dies
         logic.setEventId(1);
@@ -48,9 +47,9 @@ class EventLogicTest {
     @Test
     void testCase2() throws CaptainDeletedException, OutOfFuelException, WrongArgumentException {
 
-        LogicConfig.getInstance().setShip(new MilitaryShip());
+        Data.getInstance().setShip(new MilitaryShip());
         EventLogic logic = new EventLogic();
-        Cargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Cargo cargo = Data.getInstance().getShip().getCargo();
 
         //random resource is added
         logic.setEventId(2);
@@ -63,9 +62,9 @@ class EventLogicTest {
     @Test
     void testCase3() throws CaptainDeletedException, OutOfFuelException, WrongArgumentException {
 
-        LogicConfig.getInstance().setShip(new MilitaryShip());
+        Data.getInstance().setShip(new MilitaryShip());
         EventLogic logic = new EventLogic();
-        Cargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Cargo cargo = Data.getInstance().getShip().getCargo();
 
         IResource[] resources = new IResource[20];
         Arrays.fill(resources, 0, 5, new RedResource());
@@ -99,9 +98,9 @@ class EventLogicTest {
 
     @Test
     void testCase4() throws CaptainDeletedException, OutOfFuelException, WrongArgumentException {
-        LogicConfig.getInstance().setShip(new MilitaryShip());
+        Data.getInstance().setShip(new MilitaryShip());
         EventLogic logic = new EventLogic();
-        Ship ship = LogicConfig.getInstance().getShip();
+        Ship ship = Data.getInstance().getShip();
 
         int fuel = ship.getFuel();
 
@@ -114,9 +113,9 @@ class EventLogicTest {
 
     @Test
     void testCase6() throws CaptainDeletedException, OutOfFuelException, WrongArgumentException {
-        LogicConfig.getInstance().setShip(new MilitaryShip());
+        Data.getInstance().setShip(new MilitaryShip());
         EventLogic logic = new EventLogic();
-        Ship ship = LogicConfig.getInstance().getShip();
+        Ship ship = Data.getInstance().getShip();
 
         int crewSize = ship.getCrew().size();
         ship.looseCrewMember();

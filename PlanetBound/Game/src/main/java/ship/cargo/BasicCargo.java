@@ -1,51 +1,49 @@
 package ship.cargo;
 
+import binding.properties.ArrayProperty;
+import binding.properties.IntegerProperty;
 import resources.*;
 import resources.types.*;
-
-import java.util.ArrayList;
 
 public class BasicCargo extends Cargo {
 
     public BasicCargo() {
-        this.observers = new ArrayList<>();
-        this.maxLevel = 1;
-        this.level = 0;
+        super();
+        this.maxLevel = new IntegerProperty(1);
+        this.level = new IntegerProperty(0);
 
         //on the board is 1-6
-        blacks = new BlackResource[5];
-        blues = new BlueResource[5];
-        greens = new GreenResource[5];
-        reds = new RedResource[5];
-        artefacts = new Artefact[5];
+        blacks = new ArrayProperty<>(new BlackResource[5]);
+        blues = new ArrayProperty<>(new BlueResource[5]);
+        greens = new ArrayProperty<>(new GreenResource[5]);
+        reds = new ArrayProperty<>(new RedResource[5]);
+        artefacts = new ArrayProperty<>(new Artefact[5]);
     }
 
     //ICARGO INTERFACE REST OF THE IMPLEMENTATION
 
-    @Override
     public boolean upgrade(int level) {
 
-        if (level == 1 && this.level != level) {
+        if (level == 1 && this.level.getValue() != level) {
 
-            IResource[] temp = blacks;
-            blacks = new BlackResource[11];
-            addAll(temp, blacks);
+            IResource[] temp = blacks.getArray();
+            blacks.setNewArray(new BlackResource[11]);
+            addAll(temp, blacks.getArray());
 
-            temp = blues;
-            blues = new BlueResource[11];
-            addAll(temp, blues);
+            temp = blues.getArray();
+            blues.setNewArray(new BlueResource[11]);
+            addAll(temp, blues.getArray());
 
-            temp = greens;
-            greens = new GreenResource[11];
-            addAll(temp, greens);
+            temp = greens.getArray();
+            greens.setNewArray(new GreenResource[11]);
+            addAll(temp, greens.getArray());
 
-            temp = reds;
-            reds = new RedResource[11];
-            addAll(temp, reds);
+            temp = reds.getArray();
+            reds.setNewArray(new RedResource[11]);
+            addAll(temp, reds.getArray());
 
-            this.level = level;
+            this.level.setValue(level);
 
-            notifyChange("cargo");
             return true;
         } else {
             return false;

@@ -4,17 +4,16 @@ import app.App;
 import app.Controller;
 import app.ControllerFactory;
 import game.Game;
-import game.states.ExplorePlanet;
-import game.states.WaitInSpace;
 import javafx.fxml.FXML;
 import javafx.geometry.Insets;
 import javafx.scene.Node;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.*;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import logic.ExplorePlanetLogic;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import resources.IResource;
 import resources.types.*;
 import walker.Coordinate;
@@ -25,12 +24,16 @@ import walker.alien.aliens.GreenAlien;
 import walker.alien.aliens.RedAlien;
 import walker.miningDrone.MiningDrone;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ConcurrentModificationException;
 import java.util.Random;
 
 public class ExploreSurface extends Controller {
 
+    public ImageView background;
+    public ImageView controlPanel;
     public Pane fightView;
 
     public Text state;
@@ -50,48 +53,62 @@ public class ExploreSurface extends Controller {
 
 
     public ExploreSurface() {
-        this.updates = new HashMap<>();
-
-        System.out.println("EXPLORE CONTROLLER");
-
         ControllerFactory.addController(this);
-        Game.getInstance().addObserver(this);
 
-        LogicConfig.getInstance().addObserver(this);
-        LogicConfig.getInstance().getShip().getDrone().addObserver(this);
+        //Bind alien met event
+        Data.getInstance().currentStateProperty().addListener((oldVal, newVal) -> {
 
-        //Issue with observers -->> provide old references for the old controllers are stored
-        ((ExplorePlanet) ExplorePlanet.getInstance()).getLogic().addObserver(this);
-
-        updates.put("state", () -> {
-            updateState();
-            return null;
+            if (newVal.getClass().getSimpleName().equals("Fight")) {
+                fightView.setVisible(true);
+                Game.getInstance().fight();
+            }
         });
-        updates.put("alien", () -> {
+
+        //Bind coordinate of drone
+        Data.getInstance().getShip().getDrone().positionCoordinateProperty().addListener((oldVal, newVal) -> {
+            updateGrid(false);
+        });
+
+        //Bind coordinate of resource
+        Data.getInstance().resCoordinateProperty().addListener((oldVal, newVal) -> {
+            updateGrid(false);
+        });
+
+        //Bind coordinate of alien
+        Data.getInstance().alienPosCoordinateProperty().addListener((oldVal, newVal) -> {
+            updateGrid(false);
+        });
+
+        //Bind extraction point coordinate
+        Data.getInstance().extPointCoordinateProperty().addListener((oldVal, newVal) -> {
+            updateExtPointPosition();
+        });
+
+        //Bind alien
+        Data.getInstance().alienObjectProperty().addListener((oldVal, newVal) -> {
             updateAlien();
-            return null;
         });
-        updates.put("resource", () -> {
+
+        //Bind current resource to collect
+        Data.getInstance().resourceObjectProperty().addListener((oldVal, newVal) -> {
             updateResource();
-            return null;
         });
-        updates.put("droneShields", () -> {
+
+        //Bind drone shields
+        Data.getInstance().getShip().getDrone().shieldsCapacityIntegerProperty().addListener((oldVal, newVal) -> {
             updateDrone();
-            return null;
         });
-        updates.put("AlienMet", () -> {
-            Game.fight();
-            fightView.setVisible(true);
-            return null;
+        Data.getInstance().getShip().getDrone().shieldsIntegerProperty().addListener((oldVal, newVal) -> {
+            updateDrone();
         });
     }
 
     private void updateState() {
-        state.setText(Game.getState().toString());
+        state.setText(Game.getInstance().getState().toString());
     }
 
     private void updateAlien() {
-        Alien alien = LogicConfig.getInstance().getAlien();
+        Alien alien = Data.getInstance().getAlien();
         alienType.setText(alien.getClass().getSimpleName());
 
         int attackUp = alien.getAttackUp();
@@ -116,7 +133,7 @@ public class ExploreSurface extends Controller {
     }
 
     private void updateResource() {
-        IResource resource = LogicConfig.getInstance().getResource();
+        IResource resource = Data.getInstance().getResource();
         resourceType.setText(resource.getClass().getSimpleName());
 
         if (resource.getClass() == BlueResource.class) {
@@ -132,11 +149,10 @@ public class ExploreSurface extends Controller {
     }
 
     private void updateDrone() {
-        MiningDrone drone = LogicConfig.getInstance().getShip().getDrone();
+        MiningDrone drone = Data.getInstance().getShip().getDrone();
         maxShields.setText(String.valueOf(drone.getShieldsCapacity()));
         shields.setText(String.valueOf(drone.getShields()));
     }
-
 
     private void initGrid() {
 
@@ -161,7 +177,13 @@ public class ExploreSurface extends Controller {
                     int B = random.nextInt((40 - 18) + 1) + 18;
 
                     StackPane pane = new StackPane();
+
                     pane.setBackground(new Background(new BackgroundFill(Color.rgb(R, G, B), CornerRadii.EMPTY, Insets.EMPTY)));
+                    pane.setOpacity(0.65);
+
+                    pane.setPrefWidth(20);
+                    pane.setPrefHeight(20);
+
                     grid.add(pane, x, y);
                 }
             }
@@ -176,13 +198,13 @@ public class ExploreSurface extends Controller {
         updateAlienPosition();
         updateDronePosition();
 
-        if (!LogicConfig.getInstance().isResourceTaken()) {
+        if (!Data.getInstance().isResourceTaken()) {
             updateResourcePosition();
         }
     }
 
     private void updateDronePosition() {
-        MiningDrone drone = LogicConfig.getInstance().getShip().getDrone();
+        MiningDrone drone = Data.getInstance().getShip().getDrone();
         int x = drone.getPosition().getX();
         int y = drone.getPosition().getY();
 
@@ -198,7 +220,7 @@ public class ExploreSurface extends Controller {
     }
 
     private void updateAlienPosition() {
-        Alien alien = LogicConfig.getInstance().getAlien();
+        Alien alien = Data.getInstance().getAlien();
         int x = alien.getPosition().getX();
         int y = alien.getPosition().getY();
 
@@ -214,8 +236,8 @@ public class ExploreSurface extends Controller {
     }
 
     private void updateResourcePosition() {
-        Coordinate resCoo = LogicConfig.getInstance().getResourceCoordinate();
-        IResource resource = LogicConfig.getInstance().getResource();
+        Coordinate resCoo = Data.getInstance().getResourceCoordinate();
+        IResource resource = Data.getInstance().getResource();
 
         Rectangle rec = new Rectangle(40, 40);
 
@@ -239,7 +261,7 @@ public class ExploreSurface extends Controller {
     }
 
     private void updateExtPointPosition() {
-        Coordinate extCoo = LogicConfig.getInstance().getExtractionPoint();
+        Coordinate extCoo = Data.getInstance().getExtractionPoint();
         Rectangle rec = new Rectangle(55, 55);
 
         rec.setFill(Color.rgb(201, 176, 14));
@@ -252,6 +274,14 @@ public class ExploreSurface extends Controller {
 
     @FXML
     void initialize() {
+
+        try {
+            background.setImage(new Image(new FileInputStream("sprites/planetTexture.png")));
+            controlPanel.setImage(new Image(new FileInputStream("sprites/cockpit.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         fightView.setVisible(false);
         updateState();
         updateDrone();
@@ -262,33 +292,30 @@ public class ExploreSurface extends Controller {
 
     private void move(int direction) throws IOException {
 
-        System.out.println(LogicConfig.getInstance().getResourceCoordinate());
-
-        Coordinate droneCoo = LogicConfig.getInstance().getShip().getDrone().getPosition();
-        boolean check = false;
+        Coordinate droneCoo = Data.getInstance().getShip().getDrone().getPosition();
         switch (direction) {
             case 1:
-                check = Game.move(droneCoo.getX(), droneCoo.getY() - 1);
+                Game.getInstance().move(droneCoo.getX(), droneCoo.getY() - 1);
                 break;
             case 2:
-                check = Game.move(droneCoo.getX(), droneCoo.getY() + 1);
+                Game.getInstance().move(droneCoo.getX(), droneCoo.getY() + 1);
                 break;
             case 3:
-                check = Game.move(droneCoo.getX() - 1, droneCoo.getY());
+                Game.getInstance().move(droneCoo.getX() - 1, droneCoo.getY());
                 break;
             case 4:
-                check = Game.move(droneCoo.getX() + 1, droneCoo.getY());
+                Game.getInstance().move(droneCoo.getX() + 1, droneCoo.getY());
                 break;
         }
-        if (check) {
 
-            if (!Game.finish()) {
+        if (Data.getInstance().isFinishedExploring()) {
+            try {
+                Game.getInstance().finish();
                 App.setRoot("multiplyView");
-            } else {
-                //wining screen
+            } catch (ConcurrentModificationException ignore) {
             }
-
         }
+
         updateGrid(false);
     }
 

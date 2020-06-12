@@ -1,11 +1,14 @@
 package logic;
 
 import dice.Dice6;
-import logic.singleton.LogicConfig;
+import config.Logger;
+import game.singletons.Data;
 import walker.alien.Alien;
 import walker.miningDrone.MiningDrone;
 
-public class FightLogic {
+import java.io.Serializable;
+
+public class FightLogic implements Serializable {
 
     public boolean fight(MiningDrone drone, Alien alien) {
 
@@ -22,10 +25,11 @@ public class FightLogic {
         } while (!alien.checkDeath(Dice6.roll()));
         strB.append("Alien is dead\n");
 
-        int killed = LogicConfig.getInstance().getAliensKilled();
-        LogicConfig.getInstance().setAliensKilled(++killed);
+        int killed = Data.getInstance().getAliensKilled();
+        Data.getInstance().setAliensKilled(++killed);
 
-        LogicConfig.getInstance().setFightLog(strB.toString());
+        Data.getInstance().setFightLog(strB.toString());
+        Logger.log("Fight process: \n " + strB.toString());
         return true;
     }
 }

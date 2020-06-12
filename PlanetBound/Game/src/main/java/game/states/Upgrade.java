@@ -1,69 +1,57 @@
 package game.states;
 
-import exceptions.UnavailableException;
 import exceptions.WrongArgumentException;
-import game.Game;
+import config.Logger;
+import game.State;
+import game.singletons.Data;
 import logic.UpgradeLogic;
 
-public class Upgrade implements IState {
+public class Upgrade extends State {
 
-    protected static IState instance;
     private final UpgradeLogic logic;
-
-    public static IState getInstance() {
-        if (instance == null)
-            instance = new Upgrade();
-        return instance;
-    }
 
     public Upgrade() {
         this.logic = new UpgradeLogic();
     }
 
     @Override
-    public boolean chooseShip(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean startConvert() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean convert(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean startUpgrade() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    //USABILITY
-    @Override
-    public boolean upgrade(int choice) throws WrongArgumentException {
+    public State upgrade(int choice) throws WrongArgumentException {
 
         boolean check;
         switch (choice) {
             case 1: {
                 check = logic.refillMiningDrone();
+                if (check) {
+                    Logger.log("refilled mining drone's shields");
+                }
             }
             break;
             case 2: {
                 check = logic.upgradeCargoHold();
+                if (check) {
+                    Logger.log("Cargo hold upgraded");
+                }
             }
             break;
             case 3: {
                 check = logic.hireNewMember();
+                if (check) {
+                    Logger.log("Hired new member");
+                }
             }
             break;
             case 4: {
                 check = logic.upgradeWeaponSystem();
+                if (check) {
+                    Logger.log("Weapon system upgraded");
+                }
             }
             break;
             case 5: {
                 check = logic.buyNewMiningDrone();
+                if (check) {
+                    Logger.log("New mining drone bought");
+                }
             }
             break;
             default: {
@@ -71,42 +59,14 @@ public class Upgrade implements IState {
             }
         }
 
-        //continue upgrading
-        Game.setState(Upgrade.getInstance());
-        return check;
-    }
-
-    //USABILITY
-    @Override
-    public boolean finish() {
-
-        //exit the state -> come back to WaitInSpace state
-        Game.setState(WaitInSpace.getInstance());
-        return true;
+        Data.getInstance().setCanUpgrade(check);
+        return new Upgrade();
     }
 
     @Override
-    public boolean dropOnSurface() throws UnavailableException {
-        throw new UnavailableException();
-    }
+    public State finish() {
 
-    @Override
-    public boolean fight() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean move(int x, int y) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean travel() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean processEvent(int choice) throws UnavailableException {
-        throw new UnavailableException();
+        Logger.log("Returned to travelling in space");
+        return new WaitInSpace();
     }
 }

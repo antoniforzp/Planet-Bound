@@ -1,35 +1,34 @@
 package game.states;
 
-import exceptions.UnavailableException;
-import exceptions.WrongArgumentException;
+import game.singletons.Data;
 import game.Game;
-import logic.singleton.LogicConfig;
+import game.IState;
 import org.junit.jupiter.api.Test;
 import ship.MiningShip;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class UpgradeTest {
 
     @Test
-    void upgrade() throws UnavailableException, WrongArgumentException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(Upgrade.getInstance());
+    void upgrade() {
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new Upgrade());
 
-        assertFalse(Game.upgrade(2));
-        IState state = Game.getState();
+        Game.getInstance().upgrade(2);
+        IState state = Game.getInstance().getState();
 
-        assertEquals(state, Upgrade.getInstance());
+        assertEquals(state.getClass(), Upgrade.class);
     }
 
     @Test
-    void finish() throws UnavailableException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(Upgrade.getInstance());
+    void finish() {
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new Upgrade());
 
-        assertTrue(Game.finish());
-        IState state = Game.getState();
+        Game.getInstance().finish();
+        IState state = Game.getInstance().getState();
 
-        assertEquals(state, WaitInSpace.getInstance());
+        assertEquals(state.getClass(), WaitInSpace.class);
     }
 }

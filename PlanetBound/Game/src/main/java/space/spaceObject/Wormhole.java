@@ -1,32 +1,36 @@
 package space.spaceObject;
 
+import config.Logger;
 import ship.CrewMembers;
 import exceptions.CaptainDeletedException;
 import exceptions.OutOfFuelException;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import ship.Ship;
 
-public class Wormhole implements ISpaceObject {
+import java.io.Serializable;
+
+public class Wormhole implements ISpaceObject, Serializable {
 
     @Override
     public boolean consumeShip() throws OutOfFuelException, CaptainDeletedException {
 
         int fuelCost = 3;
         int shieldCost = 2;
-        Ship ship = LogicConfig.getInstance().getShip();
+        Ship ship = Data.getInstance().getShip();
 
-        int shields = LogicConfig.getInstance().getShip().getShield().getCells();
+        int shields = Data.getInstance().getShip().getShield().getCells();
 
         if (shields < 2) {
-            LogicConfig.getInstance().getShip().looseCrewMember();
+            Data.getInstance().getShip().looseCrewMember();
         }
         if (!ship.getCrew().contains(CrewMembers.ShieldOfficer)) {
             fuelCost += 1;
         }
 
-        LogicConfig.getInstance().getShip().consumeFuel(fuelCost);
-        LogicConfig.getInstance().getShip().getShield().takeDamage(shieldCost);
+        Data.getInstance().getShip().consumeFuel(fuelCost);
+        Data.getInstance().getShip().getShield().takeDamage(shieldCost);
 
+        Logger.log("Leaving space sector: Wormhole");
         return true;
     }
 }

@@ -1,7 +1,6 @@
 package logic;
 
-import game.Game;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import resources.IResource;
 import resources.types.BlackResource;
 import resources.types.BlueResource;
@@ -10,12 +9,14 @@ import resources.types.RedResource;
 import ship.MilitaryShip;
 import ship.Ship;
 
-public class UpgradeLogic {
+import java.io.Serializable;
+
+public class UpgradeLogic implements Serializable {
 
     //Service your landing craft to its full armor strength for one of each resource [red, black, green and blue]
     public boolean refillMiningDrone() {
 
-        Ship ship = LogicConfig.getInstance().getShip();
+        Ship ship = Data.getInstance().getShip();
 
         IResource[] required = new IResource[]{
                 new RedResource(),
@@ -27,7 +28,7 @@ public class UpgradeLogic {
         //block the attempt to refill fully charged drone
         if (ship.getDrone().getShields() < ship.getDrone().getShieldsCapacity()) {
             if (ship.getCargo().contains(required)) {
-                return LogicConfig.getInstance().getShip().getDrone().rechargeShields();
+                return Data.getInstance().getShip().getDrone().rechargeShields();
             }
         }
         return false;
@@ -36,7 +37,7 @@ public class UpgradeLogic {
     //Upgrade your cargo hold by one section, once per space station visit for two of each resource. [red, black, green and blue]
     public boolean upgradeCargoHold() {
 
-        Ship ship = LogicConfig.getInstance().getShip();
+        Ship ship = Data.getInstance().getShip();
 
         IResource[] required = new IResource[]{
                 new RedResource(), new RedResource(),
@@ -59,7 +60,7 @@ public class UpgradeLogic {
     //Hire a single crew member that was lost for one of each resource [red, black, green and blue]
     public boolean hireNewMember() {
 
-        Ship ship = LogicConfig.getInstance().getShip();
+        Ship ship = Data.getInstance().getShip();
 
         IResource[] required = new IResource[]{
                 new RedResource(),
@@ -79,7 +80,7 @@ public class UpgradeLogic {
     //Upgrade your weapon system on the Military ship for two of each resource [red, black, green and blue]
     public boolean upgradeWeaponSystem() {
 
-        Ship ship = LogicConfig.getInstance().getShip();
+        Ship ship = Data.getInstance().getShip();
 
         if (ship.getClass() == MilitaryShip.class) {
 
@@ -100,7 +101,7 @@ public class UpgradeLogic {
     //Purchase a new mining drone for two of each resource [red, black, green and blue]
     public boolean buyNewMiningDrone() {
 
-        Ship ship = LogicConfig.getInstance().getShip();
+        Ship ship = Data.getInstance().getShip();
 
         IResource[] required = new IResource[]{
                 new RedResource(), new RedResource(),

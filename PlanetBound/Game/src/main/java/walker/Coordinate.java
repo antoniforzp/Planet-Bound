@@ -1,10 +1,10 @@
 package walker;
 
-import java.util.Objects;
+import java.io.Serializable;
 
-public class Coordinate {
-    int x = 0;
-    int y = 0;
+public class Coordinate implements Serializable, Cloneable {
+    int x;
+    int y;
 
     public Coordinate(int x, int y) {
         this.x = x;
@@ -28,6 +28,11 @@ public class Coordinate {
     }
 
     @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
+
+    @Override
     public String toString() {
         return x + " " + y;
     }
@@ -38,10 +43,5 @@ public class Coordinate {
         if (o == null || getClass() != o.getClass()) return false;
         Coordinate that = (Coordinate) o;
         return x == that.x && y == that.y;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(x, y);
     }
 }

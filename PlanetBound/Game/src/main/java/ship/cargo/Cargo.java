@@ -1,29 +1,42 @@
 package ship.cargo;
 
-import observer.IObservable;
-import observer.IObserver;
+import binding.properties.ArrayProperty;
+import binding.properties.IntegerProperty;
+import config.Logger;
+import game.singletons.Data;
 import resources.IResource;
 import resources.types.*;
 
+import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Arrays;
 
-public abstract class Cargo implements ICargo, IObservable {
+public abstract class Cargo implements Serializable {
 
-    protected ArrayList<IObserver> observers;
+    protected IntegerProperty maxLevel;
+    protected IntegerProperty level;
 
-    protected int maxLevel;
-    protected int level;
+    protected ArrayProperty<BlackResource> blacks;
+    protected ArrayProperty<BlueResource> blues;
+    protected ArrayProperty<GreenResource> greens;
+    protected ArrayProperty<RedResource> reds;
+    protected ArrayProperty<Artefact> artefacts;
 
-    protected BlackResource[] blacks;
-    protected BlueResource[] blues;
-    protected GreenResource[] greens;
-    protected RedResource[] reds;
-    protected Artefact[] artefacts;
+    public Cargo() {
+//        Data.getInstance().getBinder().addProperty(maxLevel);
+//        Data.getInstance().getBinder().addProperty(level);
+//        Data.getInstance().getBinder().addProperty(blacks);
+//        Data.getInstance().getBinder().addProperty(blues);
+//        Data.getInstance().getBinder().addProperty(greens);
+//        Data.getInstance().getBinder().addProperty(reds);
+//        Data.getInstance().getBinder().addProperty(artefacts);
+    }
 
     //INNER METHODS
+    private ArrayProperty<? extends IResource> toggleContainer(IResource resource) {
 
-    private IResource[] toggleContainer(IResource resource) {
-        IResource[] temp = new IResource[0];
+        ArrayProperty<? extends IResource> temp = new ArrayProperty<>();
+
         if (resource != null) {
             switch (resource.getType()) {
                 case Black:
@@ -48,14 +61,14 @@ public abstract class Cargo implements ICargo, IObservable {
 
     private boolean load(IResource resource) {
 
-        IResource[] temp = toggleContainer(resource);
+        ArrayProperty<IResource> temp = (ArrayProperty<IResource>) toggleContainer(resource);
 
         int i = 0;
         while (true) {
-            if (i >= temp.length) {
+            if (i >= temp.getArray().length) {
                 return false;
-            } else if (temp[i] == null) {
-                temp[i] = resource;
+            } else if (temp.getValue(i) == null) {
+                temp.setValue(i, resource);
                 return true;
             }
             i++;
@@ -64,14 +77,14 @@ public abstract class Cargo implements ICargo, IObservable {
 
     private boolean remove(IResource resource) {
 
-        IResource[] temp = toggleContainer(resource);
+        ArrayProperty<IResource> temp = (ArrayProperty<IResource>) toggleContainer(resource);
 
-        int i = temp.length - 1;
+        int i = temp.getArray().length - 1;
         while (true) {
             if (i < 0) {
                 return false;
-            } else if (temp[i] != null) {
-                temp[i] = null;
+            } else if (temp.getValue(i) != null) {
+                temp.setValue(i, null);
                 return true;
             }
             i--;
@@ -82,30 +95,28 @@ public abstract class Cargo implements ICargo, IObservable {
         System.arraycopy(from, 0, to, 0, from.length);
     }
 
-    //ICARGO INTERFACE IMPLEMENTATION
 
-    @Override
     public boolean loadResources(IResource[] resources) {
         boolean check = true;
         for (IResource r : resources) {
             if (!load(r)) check = false;
         }
-        notifyChange("cargo");
+
+        Logger.log("Loaded resources: " + Arrays.toString(resources));
         return check;
     }
 
-    @Override
     public boolean removeResources(IResource[] resources) {
         boolean check = true;
         for (IResource r : resources) {
             if (!remove(r)) check = false;
         }
-        notifyChange("cargo");
+
+        Logger.log("Removed resources: " + Arrays.toString(resources));
         return check;
     }
 
 
-    @Override
     public boolean contains(IResource[] resources) {
 
         ArrayList<BlackResource> blacksT = new ArrayList<>();
@@ -138,14 +149,13 @@ public abstract class Cargo implements ICargo, IObservable {
                 }
             }
         }
-        return blacksT.size() <= getCapacity(blacks) &&
-                redsT.size() <= getCapacity(reds) &&
-                greensT.size() <= getCapacity(greens) &&
-                bluesT.size() <= getCapacity(blues) &&
-                artifactsT.size() <= getCapacity(artefacts);
+        return blacksT.size() <= getCapacity(blacks.getArray()) &&
+                redsT.size() <= getCapacity(reds.getArray()) &&
+                greensT.size() <= getCapacity(greens.getArray()) &&
+                bluesT.size() <= getCapacity(blues.getArray()) &&
+                artifactsT.size() <= getCapacity(artefacts.getArray());
     }
 
-    @Override
     public boolean checkEmpty(IResource[] resources) {
         boolean check = true;
         for (IResource r : resources) {
@@ -158,57 +168,76 @@ public abstract class Cargo implements ICargo, IObservable {
     }
 
 
-    @Override
-    public int getLevel() {
-        return level;
-    }
-
-    @Override
-    public BlackResource[] getBlacks() {
-        return blacks;
-    }
-
-    @Override
-    public BlueResource[] getBlues() {
-        return blues;
-    }
-
-    @Override
-    public GreenResource[] getGreens() {
-        return greens;
-    }
-
-    @Override
-    public RedResource[] getReds() {
-        return reds;
-    }
-
-    @Override
-    public Artefact[] getArtifacts() {
+    public ArrayProperty<Artefact> artefactArrayProperty() {
         return artefacts;
     }
 
-    @Override
+    public ArrayProperty<BlackResource> blackResourceArrayProperty() {
+        return blacks;
+    }
+
+    public ArrayProperty<BlueResource> blueResourceArrayProperty() {
+        return blues;
+    }
+
+    public ArrayProperty<RedResource> redResourceArrayProperty() {
+        return reds;
+    }
+
+    public ArrayProperty<GreenResource> greenResourceArrayProperty() {
+        return greens;
+    }
+
+
+    public int getLevel() {
+        return level.getValue();
+    }
+
+    public IntegerProperty maxLevelIntegerProperty() {
+        return maxLevel;
+    }
+
+    public IntegerProperty levelIntegerProperty() {
+        return level;
+    }
+
+    public BlackResource[] getBlacks() {
+        return blacks.getArray();
+    }
+
+    public BlueResource[] getBlues() {
+        return blues.getArray();
+    }
+
+    public GreenResource[] getGreens() {
+        return greens.getArray();
+    }
+
+    public RedResource[] getReds() {
+        return reds.getArray();
+    }
+
+    public Artefact[] getArtifacts() {
+        return artefacts.getArray();
+    }
+
+
     public boolean isBlacksEmpty() {
-        return checkEmpty(blacks);
+        return checkEmpty(blacks.getArray());
     }
 
-    @Override
     public boolean isBluesEmpty() {
-        return checkEmpty(blues);
+        return checkEmpty(blues.getArray());
     }
 
-    @Override
     public boolean isGreensEmpty() {
-        return checkEmpty(greens);
+        return checkEmpty(greens.getArray());
     }
 
-    @Override
     public boolean isRedsEmpty() {
-        return checkEmpty(reds);
+        return checkEmpty(reds.getArray());
     }
 
-    @Override
     public int getCapacity(IResource[] resources) {
         int counter = 0;
         for (IResource r : resources) {
@@ -217,33 +246,18 @@ public abstract class Cargo implements ICargo, IObservable {
         return counter;
     }
 
+    public boolean upgrade(int level) {
+        return false;
+    }
+
     //TO STRING
 
     @Override
     public String toString() {
-        return " black:\t" + getCapacity(blacks) + "/" + (blacks.length + 1) + "\n" +
-                " blue:\t" + getCapacity(blues) + "/" + (blues.length + 1) + "\n" +
-                " green:\t" + getCapacity(greens) + "/" + (greens.length + 1) + "\n" +
-                " red:\t" + getCapacity(reds) + "/" + (reds.length + 1) + "\n" +
-                " artif:\t" + getCapacity(artefacts) + "/" + (artefacts.length + 1) + "\n";
-    }
-
-    //IOBSERVABLE INTERFACE IMPLEMENTATION
-
-    @Override
-    public void addObserver(IObserver observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(IObserver observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyChange(String property) {
-        for (IObserver o : observers) {
-            o.update(property);
-        }
+        return " black:\t" + getCapacity(blacks.getArray()) + "/" + (blacks.getArray().length + 1) + "\n" +
+                " blue:\t" + getCapacity(blues.getArray()) + "/" + (blues.getArray().length + 1) + "\n" +
+                " green:\t" + getCapacity(greens.getArray()) + "/" + (greens.getArray().length + 1) + "\n" +
+                " red:\t" + getCapacity(reds.getArray()) + "/" + (reds.getArray().length + 1) + "\n" +
+                " artif:\t" + getCapacity(artefacts.getArray()) + "/" + (artefacts.getArray().length + 1) + "\n";
     }
 }

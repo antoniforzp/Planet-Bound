@@ -9,7 +9,6 @@ public class Dice6 {
 
     static public int roll() {
         int number = random.nextInt((max - min) + 1) + min;
-        System.out.println("Dice6 rolled: " + number);
         return number;
     }
 }

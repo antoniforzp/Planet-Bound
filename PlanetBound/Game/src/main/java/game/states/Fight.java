@@ -1,92 +1,41 @@
 package game.states;
 
-import exceptions.UnavailableException;
-import game.Game;
+import config.Logger;
+import game.singletons.Data;
+import game.State;
 import logic.FightLogic;
-import logic.singleton.LogicConfig;
 import walker.alien.Alien;
 import walker.miningDrone.MiningDrone;
 
-public class Fight implements IState {
+public class Fight extends State {
 
-    protected static IState instance;
     private final FightLogic logic;
-
-    public static IState getInstance() {
-        if (instance == null)
-            instance = new Fight();
-        return instance;
-    }
 
     public Fight() {
         this.logic = new FightLogic();
     }
 
-    @Override
-    public boolean chooseShip(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean startConvert() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean convert(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean startUpgrade() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean upgrade(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
     //USABILITY
     @Override
-    public boolean finish() {
-        Game.setState(ExplorePlanet.getInstance());
-        return true;
+    public State finish() {
+        return new ExplorePlanet();
     }
 
     @Override
-    public boolean dropOnSurface() throws UnavailableException {
-        throw new UnavailableException();
-    }
+    public State fight() {
 
+        MiningDrone drone = Data.getInstance().getShip().getDrone();
+        Alien alien = Data.getInstance().getAlien();
 
-    @Override
-    public boolean fight() {
+        Data.getInstance().setFightWon(logic.fight(drone, alien));
+        if (Data.getInstance().isFightWon()) {
 
-        MiningDrone drone = LogicConfig.getInstance().getShip().getDrone();
-        Alien alien = LogicConfig.getInstance().getAlien();
-
-        boolean check = logic.fight(drone, alien);
-        if (check) {
-            Game.setState(ExplorePlanet.getInstance());
-        } else {
-            Game.setState(WaitInSpace.getInstance());
+            Logger.log("Fight won. Lost shields: " + (Data.getInstance().getShip().getDrone().getShieldsCapacity() -
+                    Data.getInstance().getShip().getDrone().getShields()));
+            return new ExplorePlanet();
         }
-        return check;
-    }
 
-    @Override
-    public boolean move(int x, int y) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean travel() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean processEvent(int choice) throws UnavailableException {
-        throw new UnavailableException();
+        Logger.log("Drone destroyed");
+        return new WaitInSpace();
     }
 }

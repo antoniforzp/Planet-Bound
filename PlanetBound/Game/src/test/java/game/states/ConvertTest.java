@@ -1,65 +1,51 @@
 package game.states;
 
 import exceptions.OutOfFuelException;
-import exceptions.UnavailableException;
-import exceptions.WrongArgumentException;
+import game.singletons.Data;
 import game.Game;
-import logic.singleton.LogicConfig;
+import game.IState;
 import org.junit.jupiter.api.Test;
 import ship.MiningShip;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class ConvertTest {
 
     @Test
-    void convert() throws UnavailableException, WrongArgumentException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(Convert.getInstance());
-        LogicConfig.getInstance().setRunOutOfFuel(false);
+    void convert() {
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new Convert());
 
-        assertFalse(Game.convert(1));
-        IState state = Game.getState();
+        Game.getInstance().convert(1);
+        IState state = Game.getInstance().getState();
 
-        assertEquals(state, Convert.getInstance());
+        assertEquals(state.getClass(), Convert.class);
     }
 
     @Test
-    void convertToGameOver() throws UnavailableException, WrongArgumentException, OutOfFuelException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+    void convertToGameOver() throws OutOfFuelException {
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new WaitInSpace());
 
-        int fuel = LogicConfig.getInstance().getShip().getFuel();
-        LogicConfig.getInstance().getShip().consumeFuel(fuel - 1);
-        assertFalse(Game.travel());
+        int fuel = Data.getInstance().getShip().getFuel();
+        Data.getInstance().getShip().consumeFuel(fuel - 1);
 
-        assertFalse(Game.convert(1));
-        IState state = Game.getState();
+        Game.getInstance().travel();
+        Game.getInstance().convert(1);
 
-        assertEquals(state, GameOver.getInstance());
+        IState state = Game.getInstance().getState();
+
+        assertEquals(state.getClass(), GameOver.class);
     }
 
     @Test
     void finish() {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(Convert.getInstance());
-        LogicConfig.getInstance().setRunOutOfFuel(false);
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new Convert());
 
-        assertTrue(Game.finish());
-        IState state = Game.getState();
+        Game.getInstance().finish();
+        IState state = Game.getInstance().getState();
 
-        assertEquals(state, WaitInSpace.getInstance());
-    }
-
-    @Test
-    void finishWithNoFuel() {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setRunOutOfFuel(true);
-        Game.setState(Convert.getInstance());
-
-        assertFalse(Game.finish());
-
-        IState state = Game.getState();
-        assertEquals(state, Convert.getInstance());
+        assertEquals(state.getClass(), WaitInSpace.class);
     }
 }

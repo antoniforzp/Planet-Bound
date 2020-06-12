@@ -1,87 +1,31 @@
 package game.states;
 
 import dice.Dice6;
-import exceptions.UnavailableException;
-import game.Game;
+import config.Logger;
+import game.State;
+import game.singletons.Data;
 import logic.MultiplyLogic;
 
-public class Multiply implements IState {
+public class Multiply extends State {
 
-    protected static IState instance;
     private final MultiplyLogic logic;
-
-    public static IState getInstance() {
-        if (instance == null)
-            instance = new Multiply();
-        return instance;
-    }
 
     public Multiply() {
         this.logic = new MultiplyLogic();
     }
 
     @Override
-    public boolean chooseShip(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
+    public State finish() {
 
-    @Override
-    public boolean startConvert() throws UnavailableException {
-        throw new UnavailableException();
-    }
+        int roll = Dice6.roll();
+        Data.getInstance().setWinCondition(logic.multiply(roll));
 
-    @Override
-    public boolean convert(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean startUpgrade() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean upgrade(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean finish() {
-
-        boolean check = logic.multiply(Dice6.roll());
-
-        if (check) {
-            Game.setState(Win.getInstance());
-        } else {
-            Game.setState(WaitInSpace.getInstance());
+        if (Data.getInstance().isWinCondition()) {
+            Logger.log("Game won. 5 Artefacts has been collected");
+            return new Win();
         }
-        return check;
-    }
 
-    @Override
-    public boolean dropOnSurface() throws UnavailableException {
-        throw new UnavailableException();
+        Logger.log("Multiplying resources:" + Data.getInstance().getResource().getClass().getSimpleName() + " x " + roll);
+        return new WaitInSpace();
     }
-
-    @Override
-    public boolean fight() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    //USABILITY
-    @Override
-    public boolean move(int x, int y) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean travel() throws UnavailableException {
-        throw new UnavailableException();
-    }
-
-    @Override
-    public boolean processEvent(int choice) throws UnavailableException {
-        throw new UnavailableException();
-    }
-
 }

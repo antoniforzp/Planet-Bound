@@ -1,8 +1,7 @@
 package logic;
 
 import exceptions.CaptainDeletedException;
-import game.Game;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import org.junit.jupiter.api.Test;
 import resources.IResource;
 import resources.types.BlackResource;
@@ -21,9 +20,9 @@ class UpgradeLogicTest {
 
     @Test
     void refillMiningDroneTest() {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Cargo cargo = LogicConfig.getInstance().getShip().getCargo();
-        MiningDrone drone = LogicConfig.getInstance().getShip().getDrone();
+        Data.getInstance().setShip(new MiningShip());
+        Cargo cargo = Data.getInstance().getShip().getCargo();
+        MiningDrone drone = Data.getInstance().getShip().getDrone();
 
         UpgradeLogic logic = new UpgradeLogic();
 
@@ -49,8 +48,8 @@ class UpgradeLogicTest {
     @Test
     void upgradeCargoHoldTest() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Cargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Data.getInstance().setShip(new MiningShip());
+        Cargo cargo = Data.getInstance().getShip().getCargo();
 
         UpgradeLogic logic = new UpgradeLogic();
 
@@ -76,8 +75,8 @@ class UpgradeLogicTest {
     @Test
     void hireNewMemberTest() throws CaptainDeletedException {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Ship ship = LogicConfig.getInstance().getShip();
+        Data.getInstance().setShip(new MiningShip());
+        Ship ship = Data.getInstance().getShip();
         Cargo cargo = ship.getCargo();
 
         UpgradeLogic logic = new UpgradeLogic();
@@ -105,7 +104,7 @@ class UpgradeLogicTest {
     @Test
     void upgradeWeaponSystemTest() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
+        Data.getInstance().setShip(new MiningShip());
         UpgradeLogic logic = new UpgradeLogic();
 
         //try upgrade on mining ship
@@ -115,8 +114,8 @@ class UpgradeLogicTest {
     @Test
     void upgradeWeaponSystemTest1() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Cargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Data.getInstance().setShip(new MiningShip());
+        Cargo cargo = Data.getInstance().getShip().getCargo();
         UpgradeLogic logic = new UpgradeLogic();
 
         IResource[] required = new IResource[]{
@@ -129,8 +128,8 @@ class UpgradeLogicTest {
         //try to upgrade weapon in Mining drone
         assertFalse(logic.upgradeWeaponSystem());
 
-        LogicConfig.getInstance().setShip(new MilitaryShip());
-        cargo = LogicConfig.getInstance().getShip().getCargo();
+        Data.getInstance().setShip(new MilitaryShip());
+        cargo = Data.getInstance().getShip().getCargo();
 
         //try to upgrade without needed resources
         assertFalse(logic.upgradeWeaponSystem());
@@ -143,8 +142,8 @@ class UpgradeLogicTest {
     @Test
     void buyNewMiningDroneTest() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Cargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Data.getInstance().setShip(new MiningShip());
+        Cargo cargo = Data.getInstance().getShip().getCargo();
 
         UpgradeLogic logic = new UpgradeLogic();
 
@@ -160,9 +159,9 @@ class UpgradeLogicTest {
 
         cargo.loadResources(required);
 
-        MiningDrone drone = LogicConfig.getInstance().getShip().getDrone();
+        MiningDrone drone = Data.getInstance().getShip().getDrone();
 
         assertTrue(logic.buyNewMiningDrone());
-        assertNotSame(drone, LogicConfig.getInstance().getShip().getDrone());
+        assertNotSame(drone, Data.getInstance().getShip().getDrone());
     }
 }

@@ -5,7 +5,7 @@ import dice.Dice6;
 import exceptions.CaptainDeletedException;
 import exceptions.OutOfFuelException;
 import exceptions.WrongArgumentException;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import resources.*;
 import resources.types.BlackResource;
 import resources.types.BlueResource;
@@ -13,18 +13,19 @@ import resources.types.GreenResource;
 import resources.types.RedResource;
 import ship.Ship;
 
+import java.io.Serializable;
 import java.util.*;
 
-public class EventLogic {
+public class EventLogic implements Serializable {
 
     public void setEventId(int eventId) {
-        LogicConfig.getInstance().setEventId(eventId);
+        Data.getInstance().setEventId(eventId);
     }
 
     public void processEvent() throws CaptainDeletedException, OutOfFuelException, WrongArgumentException {
-        Ship ship = LogicConfig.getInstance().getShip();
+        Ship ship = Data.getInstance().getShip();
 
-        switch (LogicConfig.getInstance().getEventId()) {
+        switch (Data.getInstance().getEventId()) {
             case 1: {
                 ship.looseCrewMember();
             }

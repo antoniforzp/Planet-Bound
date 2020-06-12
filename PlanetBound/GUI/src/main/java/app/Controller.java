@@ -1,30 +1,30 @@
 package app;
 
-import observer.IObserver;
-import java.util.Map;
-import java.util.concurrent.Callable;
+import game.singletons.Data;
 
-public abstract class Controller implements IObserver, IController {
+import java.io.IOException;
+import java.io.Serializable;
 
-    protected Map<String, Callable<Void>> updates;
+public abstract class Controller implements Serializable {
 
-    @Override
-    public void update(String property) {
-        for (Map.Entry<String, Callable<Void>> entry : updates.entrySet()) {
-            if (entry.getKey().equals(property)) {
+    public Controller() {
+        Data.getInstance().currentStateProperty().addListener((oldVal, newVal) -> {
+
+            if (newVal.getClass().getSimpleName().equals("GameOver")) {
                 try {
-                    entry.getValue().call();
-                } catch (Exception e) {
+                    App.setRoot("gameOverView");
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
-                break;
             }
-        }
-    }
 
-    @Override
-    public void assign(String property, Callable<Void> update) {
-        updates.put(property, update);
+            if (newVal.getClass().getSimpleName().equals("Win")) {
+                try {
+                    App.setRoot("winView");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
-
 }

@@ -1,35 +1,34 @@
 package logic;
 
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import resources.IResource;
 import resources.types.Artefact;
 
+import java.io.Serializable;
 import java.util.Arrays;
 
-public class MultiplyLogic {
+public class MultiplyLogic implements Serializable {
 
     public boolean multiply(int amount) {
 
-        LogicConfig.getInstance().setAmount(amount);
-        IResource resource = LogicConfig.getInstance().getResource();
+        Data.getInstance().setAmount(amount);
+        IResource resource = Data.getInstance().getResource();
+
 
         if (resource.getClass() == Artefact.class) {
-
-            IResource[] artifact = new IResource[1];
-            Arrays.fill(artifact, resource);
-
-            LogicConfig.getInstance().getShip().getCargo().loadResources(artifact);
-
-            Artefact[] shipArtefacts = LogicConfig.getInstance().getShip().getCargo().getArtifacts();
-            return LogicConfig.getInstance().getShip().getCargo().getCapacity(shipArtefacts) >= 5;
-
+            Data.getInstance().setAmount(1);
+            Artefact[] artefact = new Artefact[]{
+                    new Artefact()
+            };
+            Data.getInstance().getShip().getCargo().loadResources(artefact);
 
         } else {
             IResource[] arr = new IResource[amount];
             Arrays.fill(arr, resource);
-
-            LogicConfig.getInstance().getShip().getCargo().loadResources(arr);
+            Data.getInstance().getShip().getCargo().loadResources(arr);
         }
-        return false;
+
+        Artefact[] shipArtefacts = Data.getInstance().getShip().getCargo().getArtifacts();
+        return Data.getInstance().getShip().getCargo().getCapacity(shipArtefacts) >= 5;
     }
 }

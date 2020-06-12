@@ -1,9 +1,9 @@
 package game.states;
 
-import exceptions.UnavailableException;
+import game.singletons.Data;
 import game.Game;
+import game.IState;
 import logic.ExplorePlanetLogic;
-import logic.singleton.LogicConfig;
 import org.junit.jupiter.api.Test;
 import ship.CrewMembers;
 import ship.MiningShip;
@@ -15,96 +15,98 @@ import static org.junit.jupiter.api.Assertions.*;
 class ExplorePlanetTest {
 
     @Test
-    void moveTestExtractionPoint() throws UnavailableException {
+    void moveTestExtractionPoint() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new WaitInSpace());
 
-        LogicConfig.getInstance().setPosition(2);
-        assertTrue(Game.dropOnSurface());
+        Data.getInstance().setPosition(2);
+        Game.getInstance().dropOnSurface();
 
-        ExplorePlanet state = (ExplorePlanet) Game.getState();
+        ExplorePlanet state = (ExplorePlanet) Game.getInstance().getState();
         ExplorePlanetLogic logic = state.getLogic();
 
         //block alien movement and place it outside the grid
         logic.setAlienMovement(false);
 
-        Coordinate resCoordinate = LogicConfig.getInstance().getResourceCoordinate();
+        Coordinate resCoordinate = Data.getInstance().getResourceCoordinate();
         System.out.println(resCoordinate);
 
         //set drone right next to resourceCoordinate
-        LogicConfig.getInstance().getShip().getDrone().setPositionInitial(resCoordinate.getX() - 1, resCoordinate.getY());
-        System.out.println(LogicConfig.getInstance().getShip().getDrone().getPosition());
+        Data.getInstance().getShip().getDrone().setPositionInitial(resCoordinate.getX() - 1, resCoordinate.getY());
+        System.out.println(Data.getInstance().getShip().getDrone().getPosition());
 
         //move drone on resource position
-        assertFalse(Game.move(resCoordinate.getX(), resCoordinate.getY()));
-        assertTrue(LogicConfig.getInstance().isResourceTaken());
+        Game.getInstance().move(resCoordinate.getX(), resCoordinate.getY());
+        assertTrue(Data.getInstance().isResourceTaken());
 
-        Coordinate extCoordinate = LogicConfig.getInstance().getExtractionPoint();
+        Coordinate extCoordinate = Data.getInstance().getExtractionPoint();
         System.out.println(extCoordinate);
 
         //set drone right next to extractionPointCoordinate
-        LogicConfig.getInstance().getShip().getDrone().setPositionInitial(extCoordinate.getX() - 1, extCoordinate.getY());
-        System.out.println(LogicConfig.getInstance().getShip().getDrone().getPosition());
+        Data.getInstance().getShip().getDrone().setPositionInitial(extCoordinate.getX() - 1, extCoordinate.getY());
+        System.out.println(Data.getInstance().getShip().getDrone().getPosition());
 
         //move drone on extractionPoint position
-        assertTrue(Game.move(extCoordinate.getX(), extCoordinate.getY()));
+        Game.getInstance().move(extCoordinate.getX(), extCoordinate.getY());
 
-        IState currentState = Game.getState();
-        assertEquals(currentState, Multiply.getInstance());
+        IState currentState = Game.getInstance().getState();
+        assertEquals(Multiply.class, currentState.getClass());
     }
 
     @Test
-    void moveTestResourceAlienMet() throws UnavailableException {
+    void moveTestResourceAlienMet() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new WaitInSpace());
 
-        LogicConfig.getInstance().setPosition(2);
-        assertTrue(LogicConfig.getInstance().getShip().getCrew().contains(CrewMembers.LandingPartyOfficer));
-        LogicConfig.getInstance().setSpaceSector(new SpaceSector());
-        assertFalse(LogicConfig.getInstance().getPlanet().isEmpty());
+        Data.getInstance().setPosition(2);
+        assertTrue(Data.getInstance().getShip().getCrew().contains(CrewMembers.LandingPartyOfficer));
+        Data.getInstance().setSpaceSector(new SpaceSector());
+        assertFalse(Data.getInstance().getPlanet().isEmpty());
 
 
-        assertTrue(Game.dropOnSurface());
+        Game.getInstance().dropOnSurface();
 
-        ExplorePlanet state = (ExplorePlanet) Game.getState();
+        ExplorePlanet state = (ExplorePlanet) Game.getInstance().getState();
         ExplorePlanetLogic logic = state.getLogic();
         logic.setAlienMovement(true);
 
-        LogicConfig.getInstance().setResourceCoordinate(new Coordinate(0, 0));
+        Data.getInstance().setResourceCoordinate(new Coordinate(0, 0));
 
         Coordinate alienCoordinate = new Coordinate(2, 1);
         logic.setAlienCoordinate(alienCoordinate);
-        assertEquals(LogicConfig.getInstance().getAlien().getPosition(), alienCoordinate);
+        assertEquals(Data.getInstance().getAlien().getPosition(), alienCoordinate);
 
-        LogicConfig.getInstance().getShip().getDrone().setPositionInitial(1, 1);
-        Game.move(alienCoordinate.getX() + 1, alienCoordinate.getY());
+        Data.getInstance().getShip().getDrone().setPositionInitial(1, 1);
+        Game.getInstance().move(alienCoordinate.getX() + 1, alienCoordinate.getY());
 
-        IState currentState = Game.getState();
-        assertEquals(currentState, Fight.getInstance());
+        IState currentState = Game.getInstance().getState();
+
+        assertEquals(Fight.class, currentState.getClass());
     }
 
     @Test
-    void moveTestResourceTaken() throws UnavailableException {
+    void moveTestResourceTaken() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().setSpaceSector(new SpaceSector());
+        Game.getInstance().setState(new WaitInSpace());
 
-        LogicConfig.getInstance().setPosition(2);
-        assertTrue(Game.dropOnSurface());
+        Data.getInstance().setPosition(2);
+        Game.getInstance().dropOnSurface();
 
-        ExplorePlanet state = (ExplorePlanet) Game.getState();
+        ExplorePlanet state = (ExplorePlanet) Game.getInstance().getState();
         ExplorePlanetLogic logic = state.getLogic();
         logic.setAlienMovement(false);
 
-        Coordinate resCoordinate = LogicConfig.getInstance().getResourceCoordinate();
+        Coordinate resCoordinate = Data.getInstance().getResourceCoordinate();
         System.out.println(resCoordinate);
 
-        LogicConfig.getInstance().getShip().getDrone().setPositionInitial(resCoordinate.getX() - 1, resCoordinate.getY());
-        System.out.println(LogicConfig.getInstance().getShip().getDrone().getPosition());
+        Data.getInstance().getShip().getDrone().setPositionInitial(resCoordinate.getX() - 1, resCoordinate.getY());
+        System.out.println(Data.getInstance().getShip().getDrone().getPosition());
 
-        assertFalse(Game.move(resCoordinate.getX(), resCoordinate.getY()));
-        assertTrue(LogicConfig.getInstance().isResourceTaken());
+        Game.getInstance().move(resCoordinate.getX(), resCoordinate.getY());
+        assertTrue(Data.getInstance().isResourceTaken());
     }
 }

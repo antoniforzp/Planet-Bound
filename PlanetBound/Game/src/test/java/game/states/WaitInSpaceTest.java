@@ -2,9 +2,9 @@ package game.states;
 
 import exceptions.CaptainDeletedException;
 import exceptions.OutOfFuelException;
-import exceptions.UnavailableException;
+import game.singletons.Data;
 import game.Game;
-import logic.singleton.LogicConfig;
+import game.IState;
 import org.junit.jupiter.api.Test;
 import ship.MiningShip;
 import space.SpaceSector;
@@ -12,174 +12,160 @@ import space.planet.Planet;
 import space.planet.planets.BlackPlanet;
 import space.spaceObject.Wormhole;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class WaitInSpaceTest {
 
     @Test
-    void startConvert1() throws CaptainDeletedException, UnavailableException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().getShip().looseCrewMember();
+    void startConvert1() throws CaptainDeletedException {
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().getShip().looseCrewMember();
 
-        Game.setState(WaitInSpace.getInstance());
+        Game.getInstance().setState(new WaitInSpace());
 
-        assertFalse(Game.startConvert());
-        IState state = Game.getState();
+        Game.getInstance().startConvert();
+        IState state = Game.getInstance().getState();
 
-        assertEquals(state, WaitInSpace.getInstance());
+        assertEquals(state.getClass(), WaitInSpace.class);
     }
 
     @Test
-    void startConvert2() throws UnavailableException {
-        LogicConfig.getInstance().setShip(new MiningShip());
+    void startConvert2() {
+        Data.getInstance().setShip(new MiningShip());
 
-        Game.setState(WaitInSpace.getInstance());
+        Game.getInstance().setState(new WaitInSpace());
 
-        assertTrue(Game.startConvert());
-        IState state = Game.getState();
+        Game.getInstance().startConvert();
+        IState state = Game.getInstance().getState();
 
-        assertEquals(state, Convert.getInstance());
+        assertEquals(state.getClass(), Convert.class);
     }
 
     @Test
-    void startUpgrade1() throws UnavailableException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+    void startUpgrade1() {
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new WaitInSpace());
 
-        LogicConfig.getInstance().setPosition(0);
-        assertFalse(Game.startUpgrade());
+        Data.getInstance().setPosition(0);
+        Game.getInstance().startUpgrade();
 
-        IState state = Game.getState();
-        assertEquals(state, WaitInSpace.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), WaitInSpace.class);
     }
 
     @Test
-    void startUpgrade2() throws UnavailableException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+    void startUpgrade2() {
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new WaitInSpace());
 
         Planet planet = new BlackPlanet();
         planet.setStation();
 
-        LogicConfig.getInstance().setPlanet(planet);
-        LogicConfig.getInstance().setPosition(2);
-        assertTrue(Game.startUpgrade());
+        Data.getInstance().setPlanet(planet);
+        Data.getInstance().setPosition(2);
+        Game.getInstance().startUpgrade();
 
-        IState state = Game.getState();
-        assertEquals(state, Upgrade.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), Upgrade.class);
     }
 
     @Test
-    void travelToEvent1() throws UnavailableException, OutOfFuelException, CaptainDeletedException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+    void travelToEvent1() {
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new WaitInSpace());
 
-        LogicConfig.getInstance().setSpaceSector(new SpaceSector());
-        LogicConfig.getInstance().setPosition(1);
+        Data.getInstance().setSpaceSector(new SpaceSector());
+        Data.getInstance().setPosition(1);
 
-        assertFalse(Game.travel());
+        Game.getInstance().travel();
 
-        IState state = Game.getState();
-        assertEquals(state, WaitInSpace.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), WaitInSpace.class);
     }
 
     @Test
-    void travelToEvent2() throws UnavailableException, OutOfFuelException, CaptainDeletedException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+    void travelToEvent2() {
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new WaitInSpace());
 
-        LogicConfig.getInstance().setSpaceSector(new SpaceSector());
-        LogicConfig.getInstance().setPosition(0);
+        Data.getInstance().setSpaceSector(new SpaceSector());
+        Data.getInstance().setPosition(0);
 
-        assertTrue(Game.travel());
+        Game.getInstance().travel();
 
-        IState state = Game.getState();
-        assertEquals(state, Event.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), Event.class);
     }
 
     @Test
-    void travelToGameOver() throws CaptainDeletedException, UnavailableException, OutOfFuelException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+    void travelToGameOver() throws CaptainDeletedException {
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new WaitInSpace());
 
-        LogicConfig.getInstance().setSpaceSector(new SpaceSector(true));
-        LogicConfig.getInstance().setPosition(2);
+        Data.getInstance().setSpaceSector(new SpaceSector(true));
+        Data.getInstance().setPosition(2);
 
-        LogicConfig.getInstance().getShip().getShield().takeDamage(100);
+        Data.getInstance().getShip().getShield().takeDamage(100);
 
-        LogicConfig.getInstance().getShip().looseCrewMember();
-        LogicConfig.getInstance().getShip().looseCrewMember();
-        LogicConfig.getInstance().getShip().looseCrewMember();
-        LogicConfig.getInstance().getShip().looseCrewMember();
-        LogicConfig.getInstance().getShip().looseCrewMember();
+        Data.getInstance().getShip().looseCrewMember();
+        Data.getInstance().getShip().looseCrewMember();
+        Data.getInstance().getShip().looseCrewMember();
+        Data.getInstance().getShip().looseCrewMember();
+        Data.getInstance().getShip().looseCrewMember();
 
-        Game.travel();
-        assertEquals(LogicConfig.getInstance().getSpaceSector().getObjects()[3].getClass(), Wormhole.class);
+        Game.getInstance().travel();
+        assertEquals(Data.getInstance().getSpaceSector().getObjects()[3].getClass(), Wormhole.class);
 
-        IState state = Game.getState();
-        assertEquals(state, GameOver.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), GameOver.class);
     }
 
     @Test
-    void travelToNoFuel() throws CaptainDeletedException, UnavailableException, OutOfFuelException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+    void dropOnSurface1() {
+        Data.getInstance().setShip(new MiningShip());
+        Game.getInstance().setState(new WaitInSpace());
 
-        int fuel = LogicConfig.getInstance().getShip().getFuel();
-        LogicConfig.getInstance().getShip().consumeFuel(fuel - 1);
+        Data.getInstance().setPlanet(new BlackPlanet());
+        Data.getInstance().getPlanet().getRandomResource();
+        Data.getInstance().getPlanet().getRandomResource();
 
-        Game.travel();
+        Game.getInstance().dropOnSurface();
 
-        IState state = Game.getState();
-        assertEquals(state, Convert.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), WaitInSpace.class);
     }
 
     @Test
-    void dropOnSurface1() throws UnavailableException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        Game.setState(WaitInSpace.getInstance());
+    void dropOnSurface2() {
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().setPosition(2);
+        Data.getInstance().setSpaceSector(new SpaceSector());
 
-        LogicConfig.getInstance().setPlanet(new BlackPlanet());
-        LogicConfig.getInstance().getPlanet().getRandomResource();
-        LogicConfig.getInstance().getPlanet().getRandomResource();
+        Game.getInstance().setState(new WaitInSpace());
 
-        assertFalse(Game.dropOnSurface());
+        Game.getInstance().dropOnSurface();
 
-        IState state = Game.getState();
-        assertEquals(state, WaitInSpace.getInstance());
-    }
-
-    @Test
-    void dropOnSurface2() throws UnavailableException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setPosition(2);
-        LogicConfig.getInstance().setSpaceSector(new SpaceSector());
-
-        Game.setState(WaitInSpace.getInstance());
-
-        assertTrue(Game.dropOnSurface());
-
-        IState state = Game.getState();
-        assertEquals(state, ExplorePlanet.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), ExplorePlanet.class);
     }
 
     @Test
     void dropOnSurface3() throws CaptainDeletedException {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setPosition(2);
-        LogicConfig.getInstance().setSpaceSector(new SpaceSector());
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().setPosition(2);
+        Data.getInstance().setSpaceSector(new SpaceSector());
 
-        Game.setState(WaitInSpace.getInstance());
+        Game.getInstance().setState(new WaitInSpace());
 
-        LogicConfig.getInstance().getShip().looseCrewMember();
-        LogicConfig.getInstance().getShip().looseCrewMember();
-        LogicConfig.getInstance().getShip().looseCrewMember();
-        LogicConfig.getInstance().getShip().looseCrewMember();
-        LogicConfig.getInstance().getShip().looseCrewMember();
+        Data.getInstance().getShip().looseCrewMember();
+        Data.getInstance().getShip().looseCrewMember();
+        Data.getInstance().getShip().looseCrewMember();
+        Data.getInstance().getShip().looseCrewMember();
+        Data.getInstance().getShip().looseCrewMember();
 
-        assertFalse(Game.dropOnSurface());
+        Game.getInstance().dropOnSurface();
 
-        IState state = Game.getState();
-        assertEquals(state, WaitInSpace.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), WaitInSpace.class);
     }
 }

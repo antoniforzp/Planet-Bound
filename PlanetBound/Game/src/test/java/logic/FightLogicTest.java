@@ -1,10 +1,8 @@
 package logic;
 
-import exceptions.UnavailableException;
-import exceptions.WrongArgumentException;
 import game.Game;
 import game.states.WaitInSpace;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import org.junit.jupiter.api.Test;
 import ship.MilitaryShip;
 import space.planet.PlanetFactory;
@@ -17,17 +15,17 @@ import static org.junit.jupiter.api.Assertions.*;
 class FightLogicTest {
 
     @Test
-    void fightTestLooseCondition() throws UnavailableException {
+    void fightTestLooseCondition() {
 
-        LogicConfig.getInstance().setShip(new MilitaryShip());
-        LogicConfig.getInstance().setPlanet(PlanetFactory.getRandomPlanet());
+        Data.getInstance().setShip(new MilitaryShip());
+        Data.getInstance().setPlanet(PlanetFactory.getRandomPlanet());
 
-        Game.setState(WaitInSpace.getInstance());
-        Game.dropOnSurface();
+        Game.getInstance().setState(new WaitInSpace());
+        Game.getInstance().dropOnSurface();
 
         FightLogic logic = new FightLogic();
 
-        MiningDrone drone = LogicConfig.getInstance().getShip().getDrone();
+        MiningDrone drone = Data.getInstance().getShip().getDrone();
         BadassAlien alien = new BadassAlien();
 
         assertFalse(logic.fight(drone, alien));
@@ -35,17 +33,17 @@ class FightLogicTest {
     }
 
     @Test
-    void fightTestWinCondition() throws UnavailableException, WrongArgumentException {
+    void fightTestWinCondition() {
 
-        LogicConfig.getInstance().setShip(new MilitaryShip());
-        LogicConfig.getInstance().setPlanet(PlanetFactory.getRandomPlanet());
+        Data.getInstance().setShip(new MilitaryShip());
+        Data.getInstance().setPlanet(PlanetFactory.getRandomPlanet());
 
-        Game.setState(WaitInSpace.getInstance());
-        Game.dropOnSurface();
+        Game.getInstance().setState(new WaitInSpace());
+        Game.getInstance().dropOnSurface();
 
         FightLogic logic = new FightLogic();
 
-        MiningDrone drone = LogicConfig.getInstance().getShip().getDrone();
+        MiningDrone drone = Data.getInstance().getShip().getDrone();
         WeakAlien alien = new WeakAlien();
 
         assertTrue(logic.fight(drone, alien));

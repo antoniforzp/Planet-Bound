@@ -4,8 +4,10 @@ import space.planet.IPlanet;
 import space.planet.PlanetFactory;
 import space.spaceObject.*;
 
+import java.io.Serializable;
 
-public class SpaceSector {
+
+public class SpaceSector implements Serializable {
 
     //   0         1        2         3
     //   >> ----   <> ----  ()     ------ or ~~~~~~

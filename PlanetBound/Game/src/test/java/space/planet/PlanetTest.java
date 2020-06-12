@@ -1,6 +1,6 @@
 package space.planet;
 
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import org.junit.jupiter.api.Test;
 import space.planet.planets.BlackPlanet;
 
@@ -10,8 +10,8 @@ class PlanetTest {
 
     @Test
     void isEmpty() {
-        LogicConfig.getInstance().setPlanet(new BlackPlanet());
-        Planet planet = LogicConfig.getInstance().getPlanet();
+        Data.getInstance().setPlanet(new BlackPlanet());
+        Planet planet = Data.getInstance().getPlanet();
 
         System.out.println(planet.getRandomResource());
         assertFalse(planet.isEmpty());
@@ -21,8 +21,8 @@ class PlanetTest {
 
     @Test
     void withSpaceStation() {
-        LogicConfig.getInstance().setPlanet(new BlackPlanet());
-        LogicConfig.getInstance().getPlanet().setStation();
-        assertTrue(LogicConfig.getInstance().getPlanet().withSpaceStation());
+        Data.getInstance().setPlanet(new BlackPlanet());
+        Data.getInstance().getPlanet().setStation();
+        assertTrue(Data.getInstance().getPlanet().withSpaceStation());
     }
 }

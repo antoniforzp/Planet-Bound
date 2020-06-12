@@ -1,6 +1,6 @@
 package logic;
 
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import org.junit.jupiter.api.Test;
 import resources.IResource;
 import resources.types.Artefact;
@@ -17,10 +17,10 @@ class MultiplyLogicTest {
     @Test
     void multiplyTest1() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setResource(new BlackResource());
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().setResource(new BlackResource());
 
-        Cargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Cargo cargo = Data.getInstance().getShip().getCargo();
 
         MultiplyLogic logic = new MultiplyLogic();
 
@@ -36,10 +36,10 @@ class MultiplyLogicTest {
 
     @Test
     void multiplyTest2() {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setResource(new Artefact());
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().setResource(new Artefact());
 
-        Cargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Cargo cargo = Data.getInstance().getShip().getCargo();
 
         MultiplyLogic logic = new MultiplyLogic();
 
@@ -55,13 +55,13 @@ class MultiplyLogicTest {
 
     @Test
     void multiplyTest3() {
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setResource(new Artefact());
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().setResource(new Artefact());
 
         IResource[] artifact = new IResource[4];
         Arrays.fill(artifact, new Artefact());
 
-        Cargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Cargo cargo = Data.getInstance().getShip().getCargo();
         cargo.loadResources(artifact);
 
         MultiplyLogic logic = new MultiplyLogic();

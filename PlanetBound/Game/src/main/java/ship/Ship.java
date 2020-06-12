@@ -1,31 +1,31 @@
 package ship;
 
+import binding.properties.IntegerProperty;
+import binding.properties.ListProperty;
+import config.Logger;
 import exceptions.CaptainDeletedException;
 import exceptions.OutOfFuelException;
-import observer.IObservable;
-import observer.IObserver;
+import game.singletons.Data;
 import ship.cargo.Cargo;
 import ship.shield.Shield;
 import ship.weapons.Weapon;
 import walker.miningDrone.MiningDrone;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 
 import static ship.CrewMembers.*;
 
-public abstract class Ship implements IShip, IObservable {
+public abstract class Ship implements Serializable {
 
     //common
-    protected ArrayList<IObserver> observers = new ArrayList<>();
-    protected List<CrewMembers> crew = new LinkedList<>();
+    protected ListProperty<CrewMembers> crew = new ListProperty<>();
     protected MiningDrone drone = new MiningDrone();
 
     //various
-    protected int maxFuel;
-    protected int fuel;
+    protected IntegerProperty maxFuel;
+    protected IntegerProperty fuel;
 
     protected Shield shield;
     protected Cargo cargo;
@@ -33,6 +33,9 @@ public abstract class Ship implements IShip, IObservable {
 
     protected Ship() {
         crew.addAll(Arrays.asList(CrewMembers.values()));
+//        Data.getInstance().getBinder().addProperty(crew);
+//        Data.getInstance().getBinder().addProperty(maxFuel);
+//        Data.getInstance().getBinder().addProperty(fuel);
     }
 
     //GETTERS (SHIP COMPONENTS-EQUIPMENT)
@@ -56,88 +59,101 @@ public abstract class Ship implements IShip, IObservable {
     //GETTERS (SHIP ATTRIBUTES)
 
     public int getMaxFuel() {
-        return this.maxFuel;
+        return this.maxFuel.getValue();
     }
+
+    public IntegerProperty maxFuelProperty() {
+        return maxFuel;
+    }
+
 
     public int getFuel() {
-        return this.fuel;
+        return this.fuel.getValue();
     }
 
+    public IntegerProperty fuelProperty() {
+        return fuel;
+    }
+
+
     public List<CrewMembers> getCrew() {
+        return crew.getList();
+    }
+
+    public ListProperty<CrewMembers> crewMembersListProperty() {
         return crew;
     }
 
-    //ISHIP INTERFACE IMPLEMENTATION
-
-    @Override
     public boolean consumeFuel(int amount) throws OutOfFuelException {
-        int check = fuel;
+        int check = fuel.getValue();
         check -= amount;
         if (check <= 0) {
-            fuel = 0;
+            fuel.setValue(0);
             throw new OutOfFuelException();
         } else {
-            fuel -= amount;
+            int updated = fuel.getValue() - amount;
+            fuel.setValue(updated);
         }
-        notifyChange("fuel");
+
+        Logger.log("Ship fuel consumed: " + amount);
         return true;
     }
 
-    @Override
     public boolean chargeOneFuel() {
-        if (fuel < maxFuel) {
-            fuel++;
-            notifyChange("fuel");
+        if (fuel.getValue() < maxFuel.getValue()) {
+            fuel.setValue(fuel.getValue() + 1);
             return true;
         }
+
+        Logger.log("One ship fuel charged");
         return false;
     }
 
-    @Override
     public boolean setNewDrone() {
         drone = new MiningDrone();
-        notifyChange("drone");
+
+        Logger.log("New drone set");
         return true;
     }
 
-    @Override
     public boolean addNewCrewMember() {
-        if (crew.size() >= 6) {
+        CrewMembers member;
+        if (crew.getList().size() >= 6) {
             return false;
         } else {
-            switch (crew.size()) {
+            switch (crew.getList().size()) {
                 case 1:
-                    crew.add(NavigationOfficer);
+                    member = NavigationOfficer;
                     break;
                 case 2:
-                    crew.add(LandingPartyOfficer);
+                    member = LandingPartyOfficer;
                     break;
                 case 3:
-                    crew.add(CrewMembers.ShieldOfficer);
+                    member = CrewMembers.ShieldOfficer;
                     break;
                 case 4:
-                    crew.add(WeaponOfficer);
+                    member = WeaponOfficer;
                     break;
                 case 5:
-                    crew.add(CargoOfficer);
+                    member = CargoOfficer;
                     break;
                 default:
                     return false;
             }
         }
-        notifyChange("crew");
+        crew.addElement(member);
+        Logger.log("New member on ship: " + member);
         return true;
     }
 
-    @Override
     public boolean looseCrewMember() throws CaptainDeletedException {
-        if (crew.size() == 1) {
+        if (crew.getList().size() == 1) {
             throw new CaptainDeletedException();
         } else {
-            int i = crew.size() - 1;
-            crew.remove(i);
+            int i = crew.getList().size() - 1;
+            CrewMembers member = crew.removeElement(i);
+            Logger.log("Crew member lost:  " + member);
         }
-        notifyChange("crew");
         return true;
     }
 
@@ -146,7 +162,7 @@ public abstract class Ship implements IShip, IObservable {
         StringBuilder strB = new StringBuilder();
 
         strB.append("CREW: ");
-        for (CrewMembers c : crew) {
+        for (CrewMembers c : crew.getList()) {
             strB.append(c).append(" ");
         }
         strB.append("\n");
@@ -154,38 +170,16 @@ public abstract class Ship implements IShip, IObservable {
         strB.append("FUEL:    ").append(fuel).append("/").append(maxFuel).append("\n");
 
         strB.append("SHIELD:  ").append(shield.getCells()).append("/").append(shield.getCapacity())
-                .append("\t active: ").append(shield.isActive()).append("\n");
+                .append("\n");
 
         strB.append("WEAPON:  ").append(weapon.getAmmunition()).append("/").append(weapon.getCapacity())
-                .append("\t active: ").append(weapon.isActive())
-                .append("\t").append(weapon).append("\n");
+                .append(weapon).append("\n");
 
-        strB.append("M.DRONE: ").append(drone.getShields()).append("/").append(drone.getShieldsCapacity())
-                .append("\t active: ").append(drone.isActive()).append("\n");
+        strB.append("M.DRONE: ").append(drone.getShields()).append("/").append(drone.getShieldsCapacity()).append("\n");
 
         strB.append("CARGO:   ").append("\n");
         strB.append(cargo).append("\n");
 
         return strB.toString();
-    }
-
-
-    //IOBSERVABLE INTERFACE IMPLEMENTATION
-
-    @Override
-    public void addObserver(IObserver observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(IObserver observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyChange(String property) {
-        for (IObserver o : observers) {
-            o.update(property);
-        }
     }
 }

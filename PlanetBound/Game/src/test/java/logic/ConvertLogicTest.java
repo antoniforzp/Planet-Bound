@@ -1,8 +1,7 @@
 package logic;
 
 import exceptions.OutOfFuelException;
-import game.Game;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import org.junit.jupiter.api.Test;
 import resources.types.BlackResource;
 import resources.types.BlueResource;
@@ -18,8 +17,8 @@ class ConvertLogicTest {
     @Test
     void chargeShieldCell() {
 
-        LogicConfig.getInstance().setShip(new MilitaryShip());
-        Ship ship = LogicConfig.getInstance().getShip();
+        Data.getInstance().setShip(new MilitaryShip());
+        Ship ship = Data.getInstance().getShip();
         ConvertLogic logic = new ConvertLogic();
 
         //try to convert with full shield cells
@@ -41,8 +40,8 @@ class ConvertLogicTest {
 
     @Test
     void loadOneAmmunition() {
-        LogicConfig.getInstance().setShip(new MilitaryShip());
-        Ship ship = LogicConfig.getInstance().getShip();
+        Data.getInstance().setShip(new MilitaryShip());
+        Ship ship = Data.getInstance().getShip();
         ConvertLogic logic = new ConvertLogic();
 
         //try to convert with full ammunition loaded
@@ -63,8 +62,8 @@ class ConvertLogicTest {
 
     @Test
     void chargeOneFuel() throws OutOfFuelException {
-        LogicConfig.getInstance().setShip(new MilitaryShip());
-        Ship ship = LogicConfig.getInstance().getShip();
+        Data.getInstance().setShip(new MilitaryShip());
+        Ship ship = Data.getInstance().getShip();
         ConvertLogic logic = new ConvertLogic();
 
         //try to convert with full fuel loaded

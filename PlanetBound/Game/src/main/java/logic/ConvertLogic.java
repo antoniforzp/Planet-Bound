@@ -1,18 +1,20 @@
 package logic;
 
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import resources.*;
 import resources.types.BlackResource;
 import resources.types.BlueResource;
 import resources.types.GreenResource;
 import ship.Ship;
 
-public class ConvertLogic {
+import java.io.Serializable;
+
+public class ConvertLogic implements Serializable {
 
     private final Ship ship;
 
     public ConvertLogic() {
-        this.ship = LogicConfig.getInstance().getShip();
+        this.ship = Data.getInstance().getShip();
     }
 
     //one shield cell = black + green + blue

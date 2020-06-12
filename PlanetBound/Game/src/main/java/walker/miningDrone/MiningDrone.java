@@ -1,52 +1,62 @@
 package walker.miningDrone;
 
-import observer.IObserver;
+import binding.properties.IntegerProperty;
+import config.Logger;
+import game.singletons.Data;
 import walker.Walker;
 
 import java.util.ArrayList;
 
 public class MiningDrone extends Walker {
-    private final boolean isActive;
-    private final int shieldsCapacity;
-    private int shields;
+    private final IntegerProperty shieldsCapacity;
+    private IntegerProperty shields;
 
 
     public MiningDrone() {
-        this.observers = new ArrayList<>();
-        this.isActive = true;
-        this.shieldsCapacity = 6;
-        this.shields = 6;
-    }
+        super();
 
-    public boolean isActive() {
-        return isActive;
+        this.shieldsCapacity = new IntegerProperty(6);
+        this.shields = new IntegerProperty(6);
+//
+//        Data.getInstance().getBinder().addProperty(shieldsCapacity);
+//        Data.getInstance().getBinder().addProperty(shields);
     }
 
     public int getShields() {
-        return shields;
+        return shields.getValue();
     }
 
     public int getShieldsCapacity() {
+        return shieldsCapacity.getValue();
+    }
+
+    public IntegerProperty shieldsIntegerProperty() {
+        return shields;
+    }
+
+    public IntegerProperty shieldsCapacityIntegerProperty() {
         return shieldsCapacity;
     }
 
     public boolean rechargeShields() {
         shields = shieldsCapacity;
-        notifyChange("droneShields");
+
+        Logger.log("Drone has recharged all shields");
         return true;
     }
 
     public boolean takeDamage(int amount) {
-        int check = shields;
+        int check = shields.getValue();
 
         check -= amount;
         if (check <= 0) {
-            shields = 0;
+            shields.setValue(0);
             return false;
         } else {
-            shields -= amount;
+            shields.setValue(shields.getValue() - amount);
         }
-        notifyChange("droneShields");
+
+        Logger.log("Drone has taken damage: " + amount);
         return true;
     }
 }

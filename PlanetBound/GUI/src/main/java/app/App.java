@@ -1,5 +1,6 @@
 package app;
 
+import config.Logger;
 import game.Game;
 import game.states.ChooseShip;
 import javafx.application.Application;
@@ -18,14 +19,15 @@ public class App extends Application {
     private static Scene scene;
 
     private void initGame() {
-        Game.setState(ChooseShip.getInstance());
+        Logger.log("=========================================");
+        Logger.log("Start log session");
     }
 
     @Override
     public void start(Stage stage) throws IOException {
         initGame();
 
-        scene = new Scene(loadFXML("chooseShipView"));
+        scene = new Scene(loadFXML("menuView"));
         stage.setScene(scene);
         stage.show();
     }

@@ -1,14 +1,15 @@
 package space.planet;
 
 import exceptions.OutOfFuelException;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 import resources.IResource;
 import space.spaceObject.ISpaceObject;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Random;
 
-public abstract class Planet implements IPlanet, ISpaceObject {
+public abstract class Planet implements IPlanet, ISpaceObject, Serializable {
 
     protected IResource currentResource;
     protected ArrayList<IResource> resources;
@@ -54,6 +55,6 @@ public abstract class Planet implements IPlanet, ISpaceObject {
 
     @Override
     public boolean consumeShip() throws OutOfFuelException {
-        return LogicConfig.getInstance().getShip().consumeFuel(1);
+        return Data.getInstance().getShip().consumeFuel(1);
     }
 }

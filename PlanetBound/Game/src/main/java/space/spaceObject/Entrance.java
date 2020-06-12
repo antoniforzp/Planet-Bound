@@ -1,12 +1,14 @@
 package space.spaceObject;
 
 import exceptions.OutOfFuelException;
-import logic.singleton.LogicConfig;
+import game.singletons.Data;
 
-public class Entrance implements ISpaceObject {
+import java.io.Serializable;
+
+public class Entrance implements ISpaceObject, Serializable {
     
     @Override
     public boolean consumeShip() throws OutOfFuelException {
-        return LogicConfig.getInstance().getShip().consumeFuel(1);
+        return Data.getInstance().getShip().consumeFuel(1);
     }
 }

@@ -3,22 +3,27 @@ package app.controllers;
 import app.App;
 import app.Controller;
 import app.ControllerFactory;
+import config.Loader;
 import dice.Dice6;
 import exceptions.CaptainDeletedException;
 import exceptions.OutOfFuelException;
+import game.singletons.Data;
 import game.Game;
+import game.states.GameOver;
 import javafx.fxml.FXML;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.Pane;
-import javafx.scene.paint.Color;
-import javafx.scene.shape.Circle;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Polygon;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Text;
-import logic.singleton.LogicConfig;
+import resources.types.Artefact;
 import ship.CrewMembers;
-import ship.cargo.ICargo;
+import ship.cargo.Cargo;
 import ship.weapons.BasicWeaponSystem;
 import space.SpaceSector;
 import space.planet.Planet;
@@ -29,8 +34,10 @@ import space.planet.planets.RedPlanet;
 import space.spaceObject.RouteOut;
 import space.spaceObject.Wormhole;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.HashMap;
+import java.util.ConcurrentModificationException;
 import java.util.List;
 
 import static ship.CrewMembers.*;
@@ -71,18 +78,15 @@ public class WaitInSpace extends Controller {
     //shields
     public Label shields;
     public Label maxShields;
-    public Label shieldsActive;
 
     //ammunition
     public Label ammunition;
     public Label maxAmmunition;
     public Label weaponType;
-    public Label weaponActive;
 
     //mining drone
     public Label droneShields;
     public Label maxDroneShields;
-    public Label droneActive;
 
     //cargo
     public Label level;
@@ -119,66 +123,68 @@ public class WaitInSpace extends Controller {
     public Text wayOutText;
     public Text wormholeText;
 
-    public Circle planetCircle;
-    public Circle stationCircle;
+    public ImageView planetImg;
+    public ImageView stationImg;
 
     public Text planetText;
     public Text stationText;
     //endregion
 
     public WaitInSpace() {
+
+        Data.getInstance().planetVisitedProperty().addListener((oldVal, newVal) -> System.out.println("planet visited: " + newVal));
+
+        //add controller to list of controllers
         ControllerFactory.addController(this);
-        LogicConfig.getInstance().addObserver(this);
-        LogicConfig.getInstance().getShip().addObserver(this);
-        LogicConfig.getInstance().getShip().getCargo().addObserver(this);
-        LogicConfig.getInstance().getShip().getWeapon().addObserver(this);
-        LogicConfig.getInstance().getShip().getShield().addObserver(this);
 
-        updates = new HashMap<>();
+        //Bind ship info
+        Data.getInstance().getShip().fuelProperty().addListener((oldVal, newVal) -> setFuel());
+        Data.getInstance().getShip().maxFuelProperty().addListener((oldVal, newVal) -> setFuel());
+        Data.getInstance().getShip().crewMembersListProperty().addListener((oldVal, newVal) -> setCrewMembers());
 
-        updates.put("state", () -> {
-            updateState();
-            return null;
-        });
-        updates.put("shipPosition", () -> {
-            updatePosition();
-            return null;
-        });
-        updates.put("spaceSector", () -> {
-            updateSpaceSector();
-            return null;
-        });
-        updates.put("crew", () -> {
-            setCrewMembers();
-            return null;
-        });
-        updates.put("fuel", () -> {
-            setFuel();
-            return null;
-        });
-        updates.put("shield", () -> {
-            setShield();
-            return null;
-        });
-        updates.put("weapon", () -> {
-            setAmmunition();
-            return null;
-        });
-        updates.put("drone", () -> {
-            setMiningDrone();
-            return null;
-        });
-        updates.put("cargo", () -> {
-            updateCargo();
-            return null;
-        });
+        //Bind cargo info
+        Data.getInstance().getShip().getCargo().artefactArrayProperty().addListener((oldVal, newVal) -> updateCargo());
+        Data.getInstance().getShip().getCargo().blackResourceArrayProperty().addListener((oldVal, newVal) -> updateCargo());
+        Data.getInstance().getShip().getCargo().redResourceArrayProperty().addListener((oldVal, newVal) -> updateCargo());
+        Data.getInstance().getShip().getCargo().blueResourceArrayProperty().addListener((oldVal, newVal) -> updateCargo());
+        Data.getInstance().getShip().getCargo().greenResourceArrayProperty().addListener((oldVal, newVal) -> updateCargo());
+        Data.getInstance().getShip().getCargo().levelIntegerProperty().addListener((oldVal, newVal) -> updateCargo());
+        Data.getInstance().getShip().getCargo().maxLevelIntegerProperty().addListener((oldVal, newVal) -> updateCargo());
+
+        //Bind weapon info
+        Data.getInstance().getShip().getWeapon().ammunitionIntegerProperty().addListener((oldVal, newVal) -> setAmmunition());
+        Data.getInstance().getShip().getWeapon().capacityIntegerProperty().addListener((oldVal, newVal) -> setAmmunition());
+
+        //Bind shield info
+        Data.getInstance().getShip().getShield().capacityIntegerProperty().addListener((oldVal, newVal) -> setShield());
+        Data.getInstance().getShip().getShield().cellsIntegerProperty().addListener((oldVal, newVal) -> setShield());
+
+        //Bind drone info
+        Data.getInstance().getShip().getDrone().shieldsIntegerProperty().addListener((oldVal, newVal) -> setMiningDrone());
+        Data.getInstance().getShip().getDrone().shieldsCapacityIntegerProperty().addListener((oldVal, newVal) -> setMiningDrone());
+
+        //Bind ship position
+        Data.getInstance().positionProperty().addListener((oldVal, newVal) -> updatePosition());
+
+        //Bind space sector
+        Data.getInstance().spaceSectorObjectProperty().addListener((oldVal, newVal) -> updateSpaceSector());
+
+        //alert
+        Data.getInstance().alertProperty().addListener((oldVal, newVal) -> alert.setText(String.valueOf(newVal)));
     }
 
     @FXML
     void initialize() {
+        try {
+            stationImg.setImage(new Image(new FileInputStream("sprites/spaceStation.png")));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
         alert.setText("");
         convertView.setVisible(false);
         upgradeView.setVisible(false);
+
         updateState();
         updatePosition();
         updateSpaceSector();
@@ -188,65 +194,99 @@ public class WaitInSpace extends Controller {
     @FXML
     void travel() {
         alert.setText("");
-        if (LogicConfig.getInstance().isRunOutOfFuel()) {
-            convertView.setVisible(true);
-        } else {
-            if (!eventProcess.isAlive()) {
-                Game.travel();
-                if (LogicConfig.getInstance().getPosition() == 1) {
-                    LogicConfig.getInstance().setEventId(Dice6.roll());
-                    eventProcess = new Thread(() -> {
-                        try {
-                            Thread.sleep(100);
-                            App.setRoot("eventView");
-                        } catch (InterruptedException | IOException e) {
-                            e.printStackTrace();
-                        }
-                    });
-                    eventProcess.start();
-                }
+        if (!eventProcess.isAlive()) {
+            Game.getInstance().travel();
+            if (Data.getInstance().getPosition() == 1) {
+                Data.getInstance().setEventId(Dice6.roll());
+                eventProcess = new Thread(() -> {
+                    try {
+                        Thread.sleep(75);
+                        App.setRoot("eventView");
+                    } catch (InterruptedException | IOException e) {
+                        e.printStackTrace();
+                    }
+                });
+                eventProcess.start();
             }
         }
     }
 
     @FXML
     void goConvert() {
-        alert.setText("");
-        if (Game.startConvert()) {
+        Game.getInstance().startConvert();
+
+        if (Data.getInstance().isCanStartConvert()) {
             convertView.setVisible(true);
-        } else {
-            alert.setText("You need to have a Cargo Officer!");
         }
     }
 
     @FXML
     void goUpgrade() {
-        alert.setText("");
-        if (Game.startUpgrade()) {
+        Game.getInstance().startUpgrade();
+
+        if (Data.getInstance().isCanStartUpgrade()) {
             upgradeView.setVisible(true);
-        } else {
-            alert.setText("You must be on planet with space station!");
         }
     }
 
     @FXML
     void goSurface() throws IOException {
+        Game.getInstance().dropOnSurface();
+
+        System.out.println(Data.getInstance().isCanDropOnSurface());
         alert.setText("");
-        if (Game.dropOnSurface()) {
+        if (Data.getInstance().isCanDropOnSurface()) {
             App.setRoot("exploreView");
-        } else {
-            alert.setText("Need to have landing party officer and be on planet!");
         }
     }
 
+    //TESTING
     @FXML
-    void looseMember() throws CaptainDeletedException {
-        LogicConfig.getInstance().getShip().looseCrewMember();
+    void looseMember() {
+        try {
+            Data.getInstance().getShip().looseCrewMember();
+
+            //TESTING
+        } catch (CaptainDeletedException e) {
+            try {
+                Game.getInstance().setState(new GameOver());
+            } catch (ConcurrentModificationException ignore) {
+            }
+        }
+    }
+
+    //TESTING
+    @FXML
+    void looseFuel() throws OutOfFuelException {
+        Data.getInstance().getShip().consumeFuel(1);
+    }
+
+    //TESTING
+    @FXML
+    void addArtefact() {
+        Artefact[] art = new Artefact[]{
+                new Artefact()
+        };
+        Data.getInstance().getShip().getCargo().loadResources(art);
     }
 
     @FXML
-    void looseFuel() throws OutOfFuelException {
-        LogicConfig.getInstance().getShip().consumeFuel(1);
+    void goMenu() {
+        try {
+
+            Alert alert = new Alert(Alert.AlertType.CONFIRMATION, "Do you want to save the game?", ButtonType.YES, ButtonType.NO, ButtonType.CANCEL);
+            alert.showAndWait();
+
+            if (alert.getResult() == ButtonType.YES) {
+                Loader.saveGame();
+                App.setRoot("menuView");
+            } else if (alert.getResult() == ButtonType.NO) {
+                App.setRoot("menuView");
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     private void initShipInfo() {
@@ -263,18 +303,18 @@ public class WaitInSpace extends Controller {
     }
 
     private void updateState() {
-        state.setText(Game.getState().toString());
+        state.setText(Game.getInstance().getState().toString());
     }
 
     private void updatePosition() {
-        position.setText(String.valueOf(LogicConfig.getInstance().getPosition()));
+        position.setText(String.valueOf(Data.getInstance().getPosition()));
 
         ship0.setVisible(false);
         ship1.setVisible(false);
         ship2.setVisible(false);
         ship3.setVisible(false);
 
-        switch (LogicConfig.getInstance().getPosition()) {
+        switch (Data.getInstance().getPosition()) {
             case 0:
                 ship0.setVisible(true);
                 break;
@@ -291,7 +331,7 @@ public class WaitInSpace extends Controller {
     }
 
     private void updateSpaceSector() {
-        SpaceSector sector = LogicConfig.getInstance().getSpaceSector();
+        SpaceSector sector = Data.getInstance().getSpaceSector();
         spaceSector.setText(sector.toString());
         spaceStructure.setText(sector.getStructure());
 
@@ -309,34 +349,38 @@ public class WaitInSpace extends Controller {
             wayOutText.setVisible(true);
         }
 
-        stationCircle.setVisible(false);
+        stationImg.setVisible(false);
         stationText.setVisible(false);
 
         Planet planet = (Planet) sector.getObjects()[2];
         if (planet.withSpaceStation()) {
-            stationCircle.setVisible(true);
+            stationImg.setVisible(true);
             stationText.setVisible(true);
         }
 
         planetText.setText(planet.getClass().getSimpleName());
+        try {
+            if (planet.getClass() == BluePlanet.class) {
+                planetImg.setImage(new Image(new FileInputStream("sprites/planets/blue.png")));
+            } else if (planet.getClass() == BlackPlanet.class) {
+                planetImg.setImage(new Image(new FileInputStream("sprites/planets/black.png")));
+            } else if (planet.getClass() == GreenPlanet.class) {
+                planetImg.setImage(new Image(new FileInputStream("sprites/planets/green.png")));
+            } else if (planet.getClass() == RedPlanet.class) {
+                planetImg.setImage(new Image(new FileInputStream("sprites/planets/red.png")));
+            }
 
-        if (planet.getClass() == BluePlanet.class) {
-            planetCircle.setFill(Color.rgb(141, 184, 252));
-        } else if (planet.getClass() == BlackPlanet.class) {
-            planetCircle.setFill(Color.rgb(55, 56, 59));
-        } else if (planet.getClass() == GreenPlanet.class) {
-            planetCircle.setFill(Color.rgb(107, 181, 47));
-        } else if (planet.getClass() == RedPlanet.class) {
-            planetCircle.setFill(Color.rgb(191, 63, 46));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
         }
     }
 
     private void setType() {
-        type.setText(LogicConfig.getInstance().getShip().getClass().getSimpleName());
+        type.setText(Data.getInstance().getShip().getClass().getSimpleName());
     }
 
     private void setCrewMembers() {
-        List<CrewMembers> crew = LogicConfig.getInstance().getShip().getCrew();
+        List<CrewMembers> crew = Data.getInstance().getShip().getCrew();
 
         captainRec.setVisible(false);
         navigatorRec.setVisible(false);
@@ -379,22 +423,20 @@ public class WaitInSpace extends Controller {
     }
 
     private void setFuel() {
-        fuel.setText(String.valueOf(LogicConfig.getInstance().getShip().getFuel()));
-        maxFuel.setText(String.valueOf(LogicConfig.getInstance().getShip().getMaxFuel()));
+        fuel.setText(String.valueOf(Data.getInstance().getShip().getFuel()));
+        maxFuel.setText(String.valueOf(Data.getInstance().getShip().getMaxFuel()));
     }
 
     private void setShield() {
-        shields.setText(String.valueOf(LogicConfig.getInstance().getShip().getShield().getCells()));
-        maxShields.setText(String.valueOf(LogicConfig.getInstance().getShip().getShield().getCapacity()));
-        shieldsActive.setText(String.valueOf(LogicConfig.getInstance().getShip().getShield().isActive()));
+        shields.setText(String.valueOf(Data.getInstance().getShip().getShield().getCells()));
+        maxShields.setText(String.valueOf(Data.getInstance().getShip().getShield().getCapacity()));
     }
 
     private void setAmmunition() {
-        ammunition.setText(String.valueOf(LogicConfig.getInstance().getShip().getWeapon().getAmmunition()));
-        maxAmmunition.setText(String.valueOf(LogicConfig.getInstance().getShip().getWeapon().getCapacity()));
-        weaponActive.setText(String.valueOf(LogicConfig.getInstance().getShip().getWeapon().isActive()));
+        ammunition.setText(String.valueOf(Data.getInstance().getShip().getWeapon().getAmmunition()));
+        maxAmmunition.setText(String.valueOf(Data.getInstance().getShip().getWeapon().getCapacity()));
 
-        if (LogicConfig.getInstance().getShip().getWeapon().getClass() == BasicWeaponSystem.class) {
+        if (Data.getInstance().getShip().getWeapon().getClass() == BasicWeaponSystem.class) {
             weaponType.setText("basic W/S");
         } else {
             weaponType.setText("advan W/S");
@@ -402,14 +444,13 @@ public class WaitInSpace extends Controller {
     }
 
     private void setMiningDrone() {
-        droneShields.setText(String.valueOf(LogicConfig.getInstance().getShip().getDrone().getShields()));
-        maxDroneShields.setText(String.valueOf(LogicConfig.getInstance().getShip().getDrone().getShieldsCapacity()));
-        droneActive.setText(String.valueOf(LogicConfig.getInstance().getShip().getDrone().isActive()));
+        droneShields.setText(String.valueOf(Data.getInstance().getShip().getDrone().getShields()));
+        maxDroneShields.setText(String.valueOf(Data.getInstance().getShip().getDrone().getShieldsCapacity()));
     }
 
     private void updateCargo() {
 
-        level.setText(String.valueOf(LogicConfig.getInstance().getShip().getCargo().getLevel()));
+        level.setText(String.valueOf(Data.getInstance().getShip().getCargo().getLevel()));
 
         setBlacks();
         setBlues();
@@ -419,31 +460,31 @@ public class WaitInSpace extends Controller {
     }
 
     private void setBlacks() {
-        ICargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Cargo cargo = Data.getInstance().getShip().getCargo();
         blacks.setText(String.valueOf(cargo.getCapacity(cargo.getBlacks())));
         maxBlacks.setText(String.valueOf(cargo.getBlacks().length));
     }
 
     private void setBlues() {
-        ICargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Cargo cargo = Data.getInstance().getShip().getCargo();
         blues.setText(String.valueOf(cargo.getCapacity(cargo.getBlues())));
         maxBlues.setText(String.valueOf(cargo.getBlues().length));
     }
 
     private void setGreens() {
-        ICargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Cargo cargo = Data.getInstance().getShip().getCargo();
         greens.setText(String.valueOf(cargo.getCapacity(cargo.getGreens())));
         maxGreens.setText(String.valueOf(cargo.getGreens().length));
     }
 
     private void setReds() {
-        ICargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Cargo cargo = Data.getInstance().getShip().getCargo();
         reds.setText(String.valueOf(cargo.getCapacity(cargo.getReds())));
         maxReds.setText(String.valueOf(cargo.getReds().length));
     }
 
     private void setArtifacts() {
-        ICargo cargo = LogicConfig.getInstance().getShip().getCargo();
+        Cargo cargo = Data.getInstance().getShip().getCargo();
         artifacts.setText(String.valueOf(cargo.getCapacity(cargo.getArtifacts())));
         maxArtifacts.setText(String.valueOf(cargo.getArtifacts().length));
     }

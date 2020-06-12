@@ -1,5 +1,6 @@
 package ship;
 
+import binding.properties.IntegerProperty;
 import ship.cargo.BasicCargo;
 import ship.shield.Shield;
 import ship.weapons.AdvancedWeaponSystem;
@@ -11,8 +12,8 @@ public class MilitaryShip extends Ship {
     public MilitaryShip() {
         super();
 
-        this.maxFuel = 35;
-        this.fuel = 35;
+        this.maxFuel = new IntegerProperty(35);
+        this.fuel = new IntegerProperty(35);
         this.shield = new Shield(9);
         this.weapon = new BasicWeaponSystem();
         this.cargo = new BasicCargo();
@@ -22,7 +23,6 @@ public class MilitaryShip extends Ship {
     public boolean upgradeWeapon() {
         int ammoLeft = weapon.getAmmunition();
         this.weapon = new AdvancedWeaponSystem(ammoLeft);
-        notifyChange("ammunition");
         return true;
     }
 

@@ -1,14 +1,13 @@
 package ship.weapons;
 
-import java.util.ArrayList;
+import binding.properties.IntegerProperty;
 
 public class BasicWeaponSystem extends Weapon {
 
     public BasicWeaponSystem() {
-        this.observers = new ArrayList<>();
-        this.capacity = 9;
-        this.ammunition = 9;
-        this.isActive = true;
+        super();
+        this.capacity = new IntegerProperty(9);
+        this.ammunition = new IntegerProperty(9);
     }
     
     @Override

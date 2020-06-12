@@ -1,8 +1,8 @@
 package game.states;
 
-import exceptions.UnavailableException;
+import game.singletons.Data;
 import game.Game;
-import logic.singleton.LogicConfig;
+import game.IState;
 import org.junit.jupiter.api.Test;
 import resources.IResource;
 import resources.types.Artefact;
@@ -11,51 +11,52 @@ import ship.MiningShip;
 
 import java.util.Arrays;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class MultiplyTest {
 
     @Test
-    void finishTest1() throws UnavailableException {
+    void finishTest1() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setResource(new BlackResource());
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().setResource(new BlackResource());
 
-        Game.setState(Multiply.getInstance());
-        assertFalse(Game.finish());
+        Game.getInstance().setState(new Multiply());
+        Game.getInstance().finish();
 
-        IState state = Game.getState();
-        assertEquals(state, WaitInSpace.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), WaitInSpace.class);
     }
 
     @Test
-    void finishTest2() throws UnavailableException {
+    void finishTest2() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setResource(new Artefact());
+        Data.getInstance().setShip(new MiningShip());
 
-        Game.setState(Multiply.getInstance());
-        assertFalse(Game.finish());
+        Data.getInstance().setResource(new Artefact());
 
-        IState state = Game.getState();
-        assertEquals(state, WaitInSpace.getInstance());
+        Game.getInstance().setState(new Multiply());
+        Game.getInstance().finish();
+
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), WaitInSpace.class);
     }
 
     @Test
-    void finishTest3() throws UnavailableException {
+    void finishTest3() {
 
-        LogicConfig.getInstance().setShip(new MiningShip());
-        LogicConfig.getInstance().setResource(new Artefact());
+        Data.getInstance().setShip(new MiningShip());
+        Data.getInstance().setResource(new Artefact());
 
         IResource[] artifact = new IResource[4];
         Arrays.fill(artifact, new Artefact());
-        LogicConfig.getInstance().getShip().getCargo().loadResources(artifact);
+        Data.getInstance().getShip().getCargo().loadResources(artifact);
 
-        Game.setState(Multiply.getInstance());
-        assertTrue(Game.finish());
+        Game.getInstance().setState(new Multiply());
+        Game.getInstance().finish();
 
-        IState state = Game.getState();
-        assertEquals(state, Win.getInstance());
+        IState state = Game.getInstance().getState();
+        assertEquals(state.getClass(), Win.class);
     }
 }
 

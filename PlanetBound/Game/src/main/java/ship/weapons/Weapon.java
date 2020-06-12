@@ -1,77 +1,62 @@
 package ship.weapons;
 
-import observer.IObservable;
-import observer.IObserver;
+import binding.properties.IntegerProperty;
+import config.Logger;
+import game.singletons.Data;
 
-import java.util.ArrayList;
+import java.io.Serializable;
 
-public abstract class Weapon implements IWeapon, IObservable {
+public abstract class Weapon implements Serializable {
 
-    protected ArrayList<IObserver> observers;
+    protected IntegerProperty capacity;
+    protected IntegerProperty ammunition;
 
-    protected int capacity;
-    protected int ammunition;
-    protected boolean isActive;
-
-    @Override
-    public int getAmmunition() {
-        return ammunition;
+    public Weapon() {
+//        Data.getInstance().getBinder().addProperty(capacity);
+//        Data.getInstance().getBinder().addProperty(ammunition);
     }
 
-    @Override
+    public int getAmmunition() {
+        return ammunition.getValue();
+    }
+
     public int getCapacity() {
+        return capacity.getValue();
+    }
+
+    public IntegerProperty capacityIntegerProperty(){
         return capacity;
     }
 
-    @Override
-    public boolean isActive() {
-        return isActive;
+    public IntegerProperty ammunitionIntegerProperty(){
+        return ammunition;
     }
 
     //USABILITY
 
-    @Override
     public boolean loadOneAmmunition() {
 
-        if (ammunition < capacity) {
-            ammunition++;
-            notifyChange("weapon");
+        if (ammunition.getValue() < capacity.getValue()) {
+            ammunition.setValue(ammunition.getValue() + 1);
+
+            Logger.log("One ammunition charged");
             return true;
         }
         return false;
     }
 
-    @Override
-    public boolean fire(int amount) {
-        int check = ammunition;
+    public void fire(int amount) {
+        int check = ammunition.getValue();
 
         check -= amount;
         if (check <= 0) {
-            ammunition = 0;
-            return false;
+            ammunition.setValue(0);
+            return;
         } else {
-            ammunition -= amount;
+            int temp = ammunition.getValue();
+            ammunition.setValue(temp - amount);
         }
-        notifyChange("weapon");
-        return true;
-    }
 
-    //IOBSERVABLE INTERFACE IMPLEMENTATION
-
-    @Override
-    public void addObserver(IObserver observer) {
-        observers.add(observer);
-    }
-
-    @Override
-    public void removeObserver(IObserver observer) {
-        observers.remove(observer);
-    }
-
-    @Override
-    public void notifyChange(String property) {
-        for (IObserver o : observers) {
-            o.update(property);
-        }
+        Logger.log("Weapon fired: " + amount);
     }
 }
