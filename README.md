@@ -11,6 +11,8 @@ In the project there were used several programming patterns:
 
 Project has also implemented Logger and Serialization.
 
+There also exists generated .jar file with .bat startup file in directory: PlanetBound\out\artifacts\PlanetBound_jar
+
 author: Antoni Forzpańczyk
 
 Menu view:
