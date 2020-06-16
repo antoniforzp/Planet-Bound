@@ -5,7 +5,8 @@ Project realized on ISEC Advanced Programming subject in practical section. Appl
 To see full description of the original game click: [link](https://boardgamegeek.com/boardgame/298332/planet-bound)
 
 In the project there were used several programming patterns:
-** VM model (to seperate Logic and GUI)
-** Object model with own property immplementation
-** State-machine model to represent states of the board game and provide consistency of the whole gameplay
+* VM model (to seperate Logic and GUI)
+* Object model with own property immplementation
+* State-machine model to represent states of the board game and provide consistency of the whole gameplay
 
+<dodać screeny>
