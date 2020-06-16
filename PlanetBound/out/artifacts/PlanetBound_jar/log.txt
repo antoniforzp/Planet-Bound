@@ -18,3 +18,17 @@
 16/06/2020 14:56:24 | 	=========================================
 16/06/2020 14:56:24 | 	Start log session
 16/06/2020 14:56:27 | 	Military ship chosen
+16/06/2020 20:28:00 | 	=========================================
+16/06/2020 20:28:00 | 	Start log session
+16/06/2020 20:28:38 | 	Military ship chosen
+16/06/2020 20:29:11 | 	Cannot enter upgrade section
+16/06/2020 20:29:12 | 	Cannot enter upgrade section
+16/06/2020 20:29:13 | 	Entered convert section
+16/06/2020 20:29:14 | 	Returned to travelling in space
+16/06/2020 20:29:15 | 	Ship fuel consumed: 1
+16/06/2020 20:29:15 | 	Ship encountered an event
+16/06/2020 20:29:16 | 	Loaded resources: [resources.types.GreenResource@42956e28]
+16/06/2020 20:29:16 | 	no. 2 event processed
+16/06/2020 20:29:17 | 	Ship fuel consumed: 1
+16/06/2020 20:29:17 | 	Ship travelled in space. Pos: 2
+16/06/2020 20:29:17 | 	Entered upgrade section
