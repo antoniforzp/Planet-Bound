@@ -21,13 +21,9 @@ public class Menu extends Controller {
 
     @FXML
     void initialize() {
-        try {
-            background.setImage(new Image(new FileInputStream("sprites/space.png")));
-            poster.setImage(new Image(new FileInputStream("sprites/logoPlanetBound.jpg")));
-            cockpit.setImage(new Image(new FileInputStream("sprites/cockpit.png")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        background.setImage(new Image(getClass().getResourceAsStream("sprites/space.png")));
+        poster.setImage(new Image(getClass().getResourceAsStream("sprites/logoPlanetBound.jpg")));
+        cockpit.setImage(new Image(getClass().getResourceAsStream("sprites/cockpit.png")));
     }
 
     @FXML

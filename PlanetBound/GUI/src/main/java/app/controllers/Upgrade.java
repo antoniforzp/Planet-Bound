@@ -29,11 +29,7 @@ public class Upgrade extends Controller {
 
     @FXML
     void initialize() {
-        try {
-            background.setImage(new Image(new FileInputStream("sprites/upgradeBG.png")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        background.setImage(new Image(getClass().getResourceAsStream("sprites/upgradeBG.png")));
         alert.setText("");
         updateState();
     }

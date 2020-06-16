@@ -82,11 +82,7 @@ public class Multiply extends Controller {
         updateShields();
         updateAliensKilled();
 
-        try {
-            background.setImage(new Image(new FileInputStream("sprites/multiplyBG.png")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        background.setImage(new Image(getClass().getResourceAsStream("sprites/multiplyBG.png")));
     }
 
     @FXML

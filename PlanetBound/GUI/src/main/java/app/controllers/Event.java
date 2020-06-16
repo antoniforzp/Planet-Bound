@@ -3,15 +3,13 @@ package app.controllers;
 import app.App;
 import app.Controller;
 import game.Game;
+import game.singletons.Data;
 import javafx.fxml.FXML;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.text.Text;
-import game.singletons.Data;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Map;
 
@@ -41,13 +39,9 @@ public class Event extends Controller {
 
     @FXML
     void initialize() {
-        try {
-            background.setImage(new Image(new FileInputStream("sprites/upgradeBG.png")));
-            prompt.setImage(new Image(new FileInputStream("sprites/prompt.png")));
-            alertIcon.setImage(new Image(new FileInputStream("sprites/alert.png")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        background.setImage(new Image(getClass().getResourceAsStream("sprites/upgradeBG.png")));
+        prompt.setImage(new Image(getClass().getResourceAsStream("sprites/prompt.png")));
+        alertIcon.setImage(new Image(getClass().getResourceAsStream("sprites/alert.png")));
         updateState();
         getMessage();
     }

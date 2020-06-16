@@ -46,8 +46,15 @@ public class WaitInSpace extends Controller {
 
     private Thread eventProcess = new Thread();
 
+    //sptites
+    public ImageView spaceBackground;
+    public ImageView cockpitLeft;
+    public ImageView cockpitTop;
+    public ImageView cockpitBottom;
+
     public Pane convertView;
     public Pane upgradeView;
+
 
     public Label state;
     public Text alert;
@@ -175,11 +182,12 @@ public class WaitInSpace extends Controller {
 
     @FXML
     void initialize() {
-        try {
-            stationImg.setImage(new Image(new FileInputStream("sprites/spaceStation.png")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+
+        stationImg.setImage(new Image(getClass().getResourceAsStream("sprites/spaceStation.png")));
+        spaceBackground.setImage(new Image(getClass().getResourceAsStream("sprites/space.png")));
+        cockpitLeft.setImage(new Image(getClass().getResourceAsStream("sprites/cockpit.png")));
+        cockpitTop.setImage(new Image(getClass().getResourceAsStream("sprites/cockpit3.png")));
+        cockpitBottom.setImage(new Image(getClass().getResourceAsStream("sprites/cockpit2.png")));
 
         alert.setText("");
         convertView.setVisible(false);
@@ -359,19 +367,14 @@ public class WaitInSpace extends Controller {
         }
 
         planetText.setText(planet.getClass().getSimpleName());
-        try {
-            if (planet.getClass() == BluePlanet.class) {
-                planetImg.setImage(new Image(new FileInputStream("sprites/planets/blue.png")));
-            } else if (planet.getClass() == BlackPlanet.class) {
-                planetImg.setImage(new Image(new FileInputStream("sprites/planets/black.png")));
-            } else if (planet.getClass() == GreenPlanet.class) {
-                planetImg.setImage(new Image(new FileInputStream("sprites/planets/green.png")));
-            } else if (planet.getClass() == RedPlanet.class) {
-                planetImg.setImage(new Image(new FileInputStream("sprites/planets/red.png")));
-            }
-
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
+        if (planet.getClass() == BluePlanet.class) {
+            planetImg.setImage(new Image(getClass().getResourceAsStream("sprites/planets/blue.png")));
+        } else if (planet.getClass() == BlackPlanet.class) {
+            planetImg.setImage(new Image(getClass().getResourceAsStream("sprites/planets/black.png")));
+        } else if (planet.getClass() == GreenPlanet.class) {
+            planetImg.setImage(new Image(getClass().getResourceAsStream("sprites/planets/green.png")));
+        } else if (planet.getClass() == RedPlanet.class) {
+            planetImg.setImage(new Image(getClass().getResourceAsStream("sprites/planets/red.png")));
         }
     }
 

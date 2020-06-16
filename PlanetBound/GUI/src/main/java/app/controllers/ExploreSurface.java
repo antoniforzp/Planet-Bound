@@ -65,42 +65,26 @@ public class ExploreSurface extends Controller {
         });
 
         //Bind coordinate of drone
-        Data.getInstance().getShip().getDrone().positionCoordinateProperty().addListener((oldVal, newVal) -> {
-            updateGrid(false);
-        });
+        Data.getInstance().getShip().getDrone().positionCoordinateProperty().addListener((oldVal, newVal) -> updateGrid(false));
 
         //Bind coordinate of resource
-        Data.getInstance().resCoordinateProperty().addListener((oldVal, newVal) -> {
-            updateGrid(false);
-        });
+        Data.getInstance().resCoordinateProperty().addListener((oldVal, newVal) -> updateGrid(false));
 
         //Bind coordinate of alien
-        Data.getInstance().alienPosCoordinateProperty().addListener((oldVal, newVal) -> {
-            updateGrid(false);
-        });
+        Data.getInstance().alienPosCoordinateProperty().addListener((oldVal, newVal) -> updateGrid(false));
 
         //Bind extraction point coordinate
-        Data.getInstance().extPointCoordinateProperty().addListener((oldVal, newVal) -> {
-            updateExtPointPosition();
-        });
+        Data.getInstance().extPointCoordinateProperty().addListener((oldVal, newVal) -> updateExtPointPosition());
 
         //Bind alien
-        Data.getInstance().alienObjectProperty().addListener((oldVal, newVal) -> {
-            updateAlien();
-        });
+        Data.getInstance().alienObjectProperty().addListener((oldVal, newVal) -> updateAlien());
 
         //Bind current resource to collect
-        Data.getInstance().resourceObjectProperty().addListener((oldVal, newVal) -> {
-            updateResource();
-        });
+        Data.getInstance().resourceObjectProperty().addListener((oldVal, newVal) -> updateResource());
 
         //Bind drone shields
-        Data.getInstance().getShip().getDrone().shieldsCapacityIntegerProperty().addListener((oldVal, newVal) -> {
-            updateDrone();
-        });
-        Data.getInstance().getShip().getDrone().shieldsIntegerProperty().addListener((oldVal, newVal) -> {
-            updateDrone();
-        });
+        Data.getInstance().getShip().getDrone().shieldsCapacityIntegerProperty().addListener((oldVal, newVal) -> updateDrone());
+        Data.getInstance().getShip().getDrone().shieldsIntegerProperty().addListener((oldVal, newVal) -> updateDrone());
     }
 
     private void updateState() {
@@ -275,12 +259,8 @@ public class ExploreSurface extends Controller {
     @FXML
     void initialize() {
 
-        try {
-            background.setImage(new Image(new FileInputStream("sprites/planetTexture.png")));
-            controlPanel.setImage(new Image(new FileInputStream("sprites/cockpit.png")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        background.setImage(new Image(getClass().getResourceAsStream("sprites/planetTexture.png")));
+        controlPanel.setImage(new Image(getClass().getResourceAsStream("sprites/cockpit.png")));
 
         fightView.setVisible(false);
         updateState();

@@ -1,0 +1,17 @@
+13/06/2020 00:27:23 | 	=========================================
+13/06/2020 00:27:23 | 	Start log session
+13/06/2020 00:27:30 | 	Military ship chosen
+13/06/2020 00:30:49 | 	=========================================
+13/06/2020 00:30:49 | 	Start log session
+16/06/2020 14:28:50 | 	=========================================
+16/06/2020 14:28:50 | 	Start log session
+16/06/2020 14:28:53 | 	Military ship chosen
+16/06/2020 14:28:58 | 	Ship fuel consumed: 1
+16/06/2020 14:28:58 | 	Ship encountered an event
+16/06/2020 14:28:59 | 	Crew member lost:  CargoOfficer
+16/06/2020 14:28:59 | 	no. 1 event processed
+16/06/2020 14:29:00 | 	Ship fuel consumed: 1
+16/06/2020 14:29:00 | 	Ship travelled in space. Pos: 2
+16/06/2020 14:29:02 | 	Dropped on planet
+16/06/2020 14:55:05 | 	=========================================
+16/06/2020 14:55:05 | 	Start log session

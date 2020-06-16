@@ -15,9 +15,6 @@ import resources.types.BlueResource;
 import resources.types.GreenResource;
 import resources.types.RedResource;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-
 
 public class Convert extends Controller {
 
@@ -38,11 +35,7 @@ public class Convert extends Controller {
 
     @FXML
     public void initialize() {
-        try {
-            background.setImage(new Image(new FileInputStream("sprites/convertBG.png")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        background.setImage(new Image(getClass().getResourceAsStream("sprites/convertBG.png")));
         updateState();
         alert.setText("");
     }

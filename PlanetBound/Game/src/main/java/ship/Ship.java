@@ -33,9 +33,6 @@ public abstract class Ship implements Serializable {
 
     protected Ship() {
         crew.addAll(Arrays.asList(CrewMembers.values()));
-//        Data.getInstance().getBinder().addProperty(crew);
-//        Data.getInstance().getBinder().addProperty(maxFuel);
-//        Data.getInstance().getBinder().addProperty(fuel);
     }
 
     //GETTERS (SHIP COMPONENTS-EQUIPMENT)

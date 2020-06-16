@@ -32,13 +32,9 @@ public class Fight extends Controller {
     @FXML
     void initialize() {
 
-        try {
-            background.setImage(new Image(new FileInputStream("sprites/upgradeBG.png")));
-            drone.setImage(new Image(new FileInputStream("sprites/drone.png")));
-            alien.setImage(new Image(new FileInputStream("sprites/alien.png")));
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
+        background.setImage(new Image(getClass().getResourceAsStream("sprites/upgradeBG.png")));
+        drone.setImage(new Image(getClass().getResourceAsStream("sprites/drone.png")));
+        alien.setImage(new Image(getClass().getResourceAsStream("sprites/alien.png")));
 
         setMessage();
         updateState();
